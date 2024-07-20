@@ -12,7 +12,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <Image
               source={require("@/assets/Home.png")}
-              className="size-28"
+              className="size-fit"
               tintColor={color}
             />
           ),
@@ -25,7 +25,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <Image
               source={require("@/assets/Agendar.png")}
-              className="size-28"
+              className="size-fit"
               tintColor={color}
             />
           ),
@@ -38,7 +38,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <Image
               source={require("@/assets/Requisição.png")}
-              className="size-28"
+              className="size-fit"
               tintColor={color}
             />
           ),
@@ -51,7 +51,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <Image
               source={require("@/assets/Mais.png")}
-              className="size-28"
+              className="size-fit"
               tintColor={color}
             />
           ),

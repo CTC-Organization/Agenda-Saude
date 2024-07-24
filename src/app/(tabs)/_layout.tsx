@@ -8,23 +8,11 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "Início",
+          headerTitleAlign: "center",
           tabBarIcon: ({ color }) => (
             <Image
-              source={require("@/assets/Home.png")}
-              className="size-fit"
-              tintColor={color}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="agendar"
-        options={{
-          title: "Agendar",
-          tabBarIcon: ({ color }) => (
-            <Image
-              source={require("@/assets/Agendar.png")}
+              source={require("@/assets/Início.png")}
               className="size-fit"
               tintColor={color}
             />
@@ -35,6 +23,7 @@ export default function TabLayout() {
         name="requisicao"
         options={{
           title: "Requisição",
+          headerTitleAlign: "center",
           tabBarIcon: ({ color }) => (
             <Image
               source={require("@/assets/Requisição.png")}
@@ -45,12 +34,27 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="mais"
+        name="marcacoes"
         options={{
-          title: "Mais",
+          title: "Marcações",
+          headerTitleAlign: "center",
           tabBarIcon: ({ color }) => (
             <Image
-              source={require("@/assets/Mais.png")}
+              source={require("@/assets/Marcações.png")}
+              className="size-fit"
+              tintColor={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="perfil"
+        options={{
+          title: "Perfil",
+          headerTitleAlign: "center",
+          tabBarIcon: ({ color }) => (
+            <Image
+              source={require("@/assets/Perfil.png")}
               className="size-fit"
               tintColor={color}
             />

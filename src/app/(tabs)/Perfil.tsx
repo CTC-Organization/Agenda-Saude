@@ -1,5 +1,5 @@
-import { Button } from "@/Components/button";
-import { Input } from "@/Components/input";
+import { Button } from "@/Components/Button";
+import { Input } from "@/Components/Input";
 import { useState } from "react";
 import { View } from "react-native";
 

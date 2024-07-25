@@ -8,24 +8,12 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "Página Inicial",
+          headerTitleAlign: "center",
           tabBarIcon: ({ color }) => (
             <Image
-              source={require("@/assets/Home.png")}
-              className="size-fit"
-              tintColor={color}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="agendar"
-        options={{
-          title: "Agendar",
-          tabBarIcon: ({ color }) => (
-            <Image
-              source={require("@/assets/Agendar.png")}
-              className="size-fit"
+              source={require("@/assets/Início.png")}
+              style={{ width: 35, height: 35 }}
               tintColor={color}
             />
           ),
@@ -35,23 +23,39 @@ export default function TabLayout() {
         name="requisicao"
         options={{
           title: "Requisição",
+          headerTitleAlign: "center",
           tabBarIcon: ({ color }) => (
             <Image
               source={require("@/assets/Requisição.png")}
-              className="size-fit"
+              style={{ width: 35, height: 35 }}
               tintColor={color}
             />
           ),
         }}
       />
       <Tabs.Screen
-        name="mais"
+        name="marcacoes"
         options={{
-          title: "Mais",
+          title: "Marcações",
+          headerTitleAlign: "center",
           tabBarIcon: ({ color }) => (
             <Image
-              source={require("@/assets/Mais.png")}
-              className="size-fit"
+              source={require("@/assets/Marcações.png")}
+              style={{ width: 35, height: 35 }}
+              tintColor={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="perfil"
+        options={{
+          title: "Perfil",
+          headerTitleAlign: "center",
+          tabBarIcon: ({ color }) => (
+            <Image
+              source={require("@/assets/Perfil.png")}
+              style={{ width: 35, height: 35 }}
               tintColor={color}
             />
           ),

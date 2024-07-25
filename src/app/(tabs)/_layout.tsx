@@ -1,4 +1,3 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
 import { Image } from "react-native";
 
@@ -8,7 +7,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Início",
+          title: "Página Inicial",
           headerTitleAlign: "center",
           tabBarIcon: ({ color }) => (
             <Image
@@ -27,7 +26,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <Image
               source={require("@/assets/Requisição.png")}
-              className="size-fit"
+              style={{ width: 35, height: 35 }}
               tintColor={color}
             />
           ),

@@ -1,6 +1,4 @@
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { ReactNode } from "react";
-import { View, Text } from "react-native";
 import { colors } from "@/styles/colors";
 
 type Props = {

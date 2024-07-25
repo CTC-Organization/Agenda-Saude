@@ -1,9 +1,9 @@
-import { Input } from "@/Components/input";
+import { Input } from "@/Components/Input";
 import { router } from "expo-router";
 import { useState } from "react";
 import { View, Text, Pressable, Alert } from "react-native";
-import { Button } from "@/Components/button";
-import Checkbox from "@/Components/checkbox";
+import { Button } from "@/Components/Button";
+import Checkbox from "@/Components/Checkbox";
 
 export default function Login() {
   const [cpf, setCpf] = useState("");

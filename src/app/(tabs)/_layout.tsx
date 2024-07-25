@@ -20,7 +20,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="requisicao"
+        name="Requisicao"
         options={{
           title: "Requisição",
           headerTitleAlign: "center",
@@ -35,7 +35,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="marcacoes"
+        name="Marcacoes"
         options={{
           title: "Marcações",
           headerTitleAlign: "center",
@@ -50,7 +50,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="perfil"
+        name="Perfil"
         options={{
           title: "Perfil",
           headerTitleAlign: "center",

@@ -1,6 +1,5 @@
-import { colors } from "@/styles/colors";
 import { ReactNode } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 
 type Props = {
   children: ReactNode;

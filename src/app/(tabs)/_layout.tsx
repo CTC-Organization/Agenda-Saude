@@ -1,4 +1,3 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
 import { Image } from "react-native";
 
@@ -8,50 +7,58 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "Página Inicial",
+          headerTitleAlign: "center",
           tabBarIcon: ({ color }) => (
             <Image
-              source={require("@/assets/Home.png")}
-              className="size-fit"
+              source={require("@/assets/Início.png")}
+              className="size-full"
+              resizeMode="contain"
               tintColor={color}
             />
           ),
         }}
       />
       <Tabs.Screen
-        name="agendar"
-        options={{
-          title: "Agendar",
-          tabBarIcon: ({ color }) => (
-            <Image
-              source={require("@/assets/Agendar.png")}
-              className="size-fit"
-              tintColor={color}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="requisicao"
+        name="Requisicao"
         options={{
           title: "Requisição",
+          headerTitleAlign: "center",
           tabBarIcon: ({ color }) => (
             <Image
               source={require("@/assets/Requisição.png")}
-              className="size-fit"
+              className="size-full"
+              resizeMode="contain"
               tintColor={color}
             />
           ),
         }}
       />
       <Tabs.Screen
-        name="mais"
+        name="Marcacoes"
         options={{
-          title: "Mais",
+          title: "Marcações",
+          headerTitleAlign: "center",
           tabBarIcon: ({ color }) => (
             <Image
-              source={require("@/assets/Mais.png")}
-              className="size-fit"
+              source={require("@/assets/Marcações.png")}
+              className="size-full"
+              resizeMode="contain"
+              tintColor={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="Perfil"
+        options={{
+          title: "Perfil",
+          headerTitleAlign: "center",
+          tabBarIcon: ({ color }) => (
+            <Image
+              source={require("@/assets/Perfil.png")}
+              className="size-full"
+              resizeMode="contain"
               tintColor={color}
             />
           ),

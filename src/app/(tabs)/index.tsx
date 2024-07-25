@@ -1,17 +1,30 @@
-import { View, Text, StyleSheet } from "react-native";
+// src/app/(tabs)/index.tsx
 
-export default function Tab() {
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { Card } from "@/Components/Card";
+import { InfoBox } from "@/Components/InfoBox";
+import { Header } from "@/Components/Header";
+
+export default function Inicio() {
   return (
-    <View style={styles.container}>
-      <Text>Tab [Home]</Text>
+    <View className="flex-1 justify-start items-center bg-white">
+      <Header />
+      <View className="h-3.5" />
+      <Card title="Posto Próximo">
+        <View className="items-center">
+          <InfoBox>
+            <Text>Posto Pedro R. Filho 1.2km</Text>
+          </InfoBox>
+          <InfoBox>
+            <Text>Posta Bruno F. das Dores 2.4km</Text>
+          </InfoBox>
+        </View>
+      </Card>
+      <View className="h-5" />
+      <Card title="Ficha">
+        <Text className="text-left"></Text>
+      </Card>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

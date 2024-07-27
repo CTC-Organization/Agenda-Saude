@@ -1,6 +1,6 @@
 import { colors } from "@/styles/colors";
 import { ReactNode } from "react";
-import { View, TextInput, TextInputProps } from "react-native";
+import { TextInput, TextInputProps, View } from "react-native";
 
 function Input({ children }: { children: ReactNode }) {
   return (

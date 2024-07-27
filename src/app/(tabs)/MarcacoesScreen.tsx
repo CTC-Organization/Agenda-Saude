@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { View, Text, Pressable } from 'react-native';
-import { FlashList } from '@shopify/flash-list';
-import { router } from 'expo-router';
-import { Button } from '@/components/Button';
+import { Button } from "@/components/Button";
+import { FlashList } from "@shopify/flash-list";
+import { router } from "expo-router";
+import React, { useState } from "react";
+import { Pressable, Text, View } from "react-native";
 
 type AccordionItemProps = {
   title: string;
@@ -34,11 +34,11 @@ const AccordionItem = ({ title, status }: AccordionItemProps) => {
 };
 
 const data = [
-  { title: 'Consulta 1', status: 'Aguardando' },
-  { title: 'Consulta 2', status: 'Confirmada' },
-  { title: 'Consulta 3', status: 'Cancelada' },
-  { title: 'Consulta 4', status: 'Negada' },
-  { title: 'Consulta 5', status: 'Finalizada' },
+  { title: "Consulta 1", status: "Aguardando" },
+  { title: "Consulta 2", status: "Confirmada" },
+  { title: "Consulta 3", status: "Cancelada" },
+  { title: "Consulta 4", status: "Negada" },
+  { title: "Consulta 5", status: "Finalizada" },
 ];
 
 export default function MarcacoesScreen() {

@@ -1,5 +1,5 @@
-import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { colors } from "@/styles/colors";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 type Props = {
   text: string;
@@ -24,5 +24,3 @@ export function Checkbox({ text }: Props) {
     />
   );
 }
-
-export default Checkbox;

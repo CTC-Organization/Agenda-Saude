@@ -11,7 +11,7 @@ export default function TabLayout() {
           headerTitleAlign: "center",
           tabBarIcon: ({ color }) => (
             <Image
-              source={require("@/assets/Início.png")}
+              source={require("@/assets/inicio.png")}
               className="size-full"
               resizeMode="contain"
               tintColor={color}
@@ -20,13 +20,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="Requisicao"
+        name="RequisicaoScreen"
         options={{
           title: "Requisição",
           headerTitleAlign: "center",
           tabBarIcon: ({ color }) => (
             <Image
-              source={require("@/assets/Requisição.png")}
+              source={require("@/assets/requisicao.png")}
               className="size-full"
               resizeMode="contain"
               tintColor={color}
@@ -35,13 +35,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="Marcacoes"
+        name="MarcacoesScreen"
         options={{
           title: "Marcações",
           headerTitleAlign: "center",
           tabBarIcon: ({ color }) => (
             <Image
-              source={require("@/assets/Marcações.png")}
+              source={require("@/assets/marcacoes.png")}
               className="size-full"
               resizeMode="contain"
               tintColor={color}
@@ -50,13 +50,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="Perfil"
+        name="PerfilScreen"
         options={{
           title: "Perfil",
           headerTitleAlign: "center",
           tabBarIcon: ({ color }) => (
             <Image
-              source={require("@/assets/Perfil.png")}
+              source={require("@/assets/perfil.png")}
               className="size-full"
               resizeMode="contain"
               tintColor={color}

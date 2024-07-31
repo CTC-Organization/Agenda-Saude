@@ -1,21 +1,38 @@
-import { Input } from "@/Components/Input";
+import { Button } from "@/components/Button";
+import { Checkbox } from "@/components/Checkbox";
+import { Input } from "@/components/Input";
+import showToast from "@/components/Toast";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import { useState } from "react";
-import { View, Text, Pressable, Alert } from "react-native";
-import { Button } from "@/Components/Button";
-import Checkbox from "@/Components/Checkbox";
+import { useForm } from "react-hook-form";
+import { Pressable, Text, View } from "react-native";
+import * as z from "zod";
+
+const schema = z.object({
+  cpf: z
+    .string()
+    .min(1, "CPF é obrigatório")
+    .length(11, "CPF deve ter exatamente 11 caracteres"),
+  password: z.string().min(1, "Senha é obrigatória"),
+});
 
 export default function Login() {
-  const [cpf, setCpf] = useState("");
-  const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
 
+  const { control, handleSubmit } = useForm({
+    defaultValues: {
+      cpf: "",
+      password: "",
+    },
+    resolver: zodResolver(schema),
+  });
+
   const handleLogin = () => {
-    if (cpf.trim() === "" || password.trim() === "") {
-      Alert.alert("Erro", "Preencha todos os campos");
-      return;
-    }
-    router.replace("(tabs)");
+    showToast("success", "Login efetuado com sucesso", "Seja bem-vindo!");
+    setTimeout(() => {
+      router.replace({ pathname: "/(tabs)" });
+    }, 1000);
   };
 
   const togglePasswordVisibility = () => {
@@ -26,13 +43,18 @@ export default function Login() {
     <View className="flex-1 bg-white items-center justify-center p-8">
       <View className="w-full gap-3">
         <Input>
-          <Input.Field placeholder="CPF" value={cpf} onChangeText={setCpf} />
+          <Input.Field
+            control={control}
+            name="cpf"
+            placeholder="Digite seu CPF"
+            keyboardType="numeric"
+          />
         </Input>
         <Input>
           <Input.Field
-            placeholder="Senha"
-            value={password}
-            onChangeText={setPassword}
+            control={control}
+            name="password"
+            placeholder="Digite sua senha"
             secureTextEntry={!passwordVisible}
           />
           <Pressable onPress={togglePasswordVisibility}>
@@ -47,7 +69,7 @@ export default function Login() {
       </View>
       <View className="mt-36"></View>
       <View className="flex-1 w-96 items-center mt-12">
-        <Button title="Fazer Login" onPress={handleLogin} />
+        <Button title="Fazer Login" onPress={handleSubmit(handleLogin)} />
       </View>
     </View>
   );

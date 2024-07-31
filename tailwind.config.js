@@ -1,5 +1,5 @@
 import { colors } from "./src/styles/colors";
-import { fontFamily } from "./src/styles/fontFamily";
+import { fontFamily } from "./src/styles/font-family";
 
 module.exports = {
   content: ["./src/**/*.{ts,tsx}"],

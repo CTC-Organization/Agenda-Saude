@@ -1,15 +1,23 @@
-// src/app/(tabs)/index.tsx
-
+import { Card } from "@/components/Card";
+import { InfoBox } from "@/components/InfoBox";
+import { NotificationButton } from "@/components/NotificationButton";
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { Card } from "@/Components/Card";
-import { InfoBox } from "@/Components/InfoBox";
-import { Header } from "@/Components/Header";
+import { Text, View } from "react-native";
 
-export default function Inicio() {
+export default function Home() {
+  const username = "Claúdia";
   return (
     <View className="flex-1 justify-start items-center bg-white">
-      <Header />
+      <View
+        className="w-full h-12 flex-row shrink-0 justify-between items-center 
+    opacity-100 px-2.5"
+      >
+        <Text className="text-black text-base font-normal ms-5">
+          Olá, {username}
+        </Text>
+        <View className="mx-6" />
+        <NotificationButton />
+      </View>
       <View className="h-3.5" />
       <Card title="Posto Próximo">
         <View className="items-center">

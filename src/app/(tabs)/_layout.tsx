@@ -64,6 +64,12 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="DetalhesScreen"
+        options={{
+          tabBarButton: () => null, // Oculta o botão da barra de navegação
+        }}
+      />
     </Tabs>
   );
 }

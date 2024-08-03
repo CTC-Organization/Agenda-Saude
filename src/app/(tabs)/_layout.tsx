@@ -1,9 +1,10 @@
+import { colors } from "@/styles/colors";
 import { Tabs } from "expo-router";
 import { Image } from "react-native";
 
 export default function TabLayout() {
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: "blue" }}>
+    <Tabs screenOptions={{ tabBarActiveTintColor: colors.green.light }}>
       <Tabs.Screen
         name="index"
         options={{
@@ -20,7 +21,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="RequisicaoScreen"
+        name="RequestScreen"
         options={{
           title: "Requisição",
           headerTitleAlign: "center",
@@ -35,7 +36,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="MarcacoesScreen"
+        name="AppointmentsScreen"
         options={{
           title: "Marcações",
           headerTitleAlign: "center",
@@ -50,7 +51,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="PerfilScreen"
+        name="ProfileScreen"
         options={{
           title: "Perfil",
           headerTitleAlign: "center",
@@ -65,9 +66,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="DetalhesScreen"
+        name="DetailsScreen"
         options={{
-          tabBarButton: () => null, // Oculta o botão da barra de navegação
+          tabBarButton: () => null,
         }}
       />
     </Tabs>

@@ -10,4 +10,4 @@ const showToast = (type: ToastType, text1: string, text2: any) => {
   });
 };
 
-export default showToast;
+export { showToast };

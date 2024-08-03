@@ -13,6 +13,20 @@ export default function Layout() {
             headerTitleAlign: "center",
           }}
         />
+        <Stack.Screen
+          name="SignUpScreen"
+          options={{
+            title: "Cadastro",
+            headerTitleAlign: "center",
+          }}
+        />
+        <Stack.Screen
+          name="ForgotPasswordScreen"
+          options={{
+            title: "Esqueci minha senha",
+            headerTitleAlign: "center",
+          }}
+        />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
       <Toast />

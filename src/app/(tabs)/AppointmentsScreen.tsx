@@ -40,7 +40,7 @@ const AccordionItem = ({ title, status }: AccordionItemProps) => {
           <Text className="text-base mb-2">Status: {status}</Text>
           <Button
             title="Ver Detalhes"
-            onPress={() => router.push("/DetalhesScreen")}
+            onPress={() => router.push("/DetailsScreen")}
           />
         </View>
       )}

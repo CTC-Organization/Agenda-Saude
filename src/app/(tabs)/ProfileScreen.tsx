@@ -1,7 +1,7 @@
 import { Button } from "@/components/Button";
 import { DateInput } from "@/components/DateInput";
 import { Input } from "@/components/Input";
-import showToast from "@/components/Toast";
+import { showToast } from "@/components/Toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -26,7 +26,7 @@ const schema = z.object({
     .string()
     .regex(/^\d{2}9\d{8}$/, "Telefone inválido, use o formato dd9seunúmero")
     .length(11, "N° do SUS deve ter exatamente 15 caracteres"),
-  email: z.string().email("E-mail inválido"),
+  email: z.string().email("E-mail inválido").min(1, "E-mail é obrigatório"),
   age: z.number().int().positive(),
 });
 

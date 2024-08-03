@@ -1,12 +1,12 @@
 import { ReactNode } from "react";
 import { Text, View } from "react-native";
 
-type Props = {
+type CardProps = {
   children: ReactNode;
   title?: string;
 };
 
-export function Card({ children, title }: Props) {
+export function Card({ children, title }: CardProps) {
   return (
     <View
       style={{ elevation: 4 }}

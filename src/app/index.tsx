@@ -1,7 +1,7 @@
 import { Button } from "@/components/Button";
 import { Checkbox } from "@/components/Checkbox";
 import { Input } from "@/components/Input";
-import showToast from "@/components/Toast";
+import { showToast } from "@/components/Toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, router } from "expo-router";
 import { useState } from "react";

@@ -3,7 +3,7 @@ import { Checkbox } from "@/components/Checkbox";
 import { Input } from "@/components/Input";
 import showToast from "@/components/Toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Pressable, Text, View } from "react-native";
@@ -63,13 +63,24 @@ export default function Login() {
             </Text>
           </Pressable>
         </Input>
-        <View className="w-full items-center justify-center">
-          <Checkbox text="Conectar Automaticamente" />
+        <View className="w-full items-start justify-start">
+          <Checkbox text="Mantenha-me Conectado" />
+        </View>
+        <View className="w-full items-end justify-end">
+          <Link href={"/ForgotPasswordScreen"}>
+            <Text className="text-sky-500">Esqueci minha senha</Text>
+          </Link>
         </View>
       </View>
       <View className="mt-36"></View>
       <View className="flex-1 w-96 items-center mt-12">
         <Button title="Fazer Login" onPress={handleSubmit(handleLogin)} />
+      </View>
+      <View className="flex-row gap-2">
+        <Text>Ainda não possui uma conta?</Text>
+        <Link href={"/SignUpScreen"}>
+          <Text className="text-sky-500">Cadastre-se</Text>
+        </Link>
       </View>
     </View>
   );

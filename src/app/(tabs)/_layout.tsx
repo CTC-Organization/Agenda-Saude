@@ -68,6 +68,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="DetailsScreen"
         options={{
+          title: "Detalhes da Consulta",
+          headerTitleAlign: "center",
           tabBarButton: () => null,
         }}
       />

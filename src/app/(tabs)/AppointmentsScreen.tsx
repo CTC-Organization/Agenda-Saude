@@ -3,12 +3,29 @@ import { Text, View } from "react-native";
 import AccordionItem from "@/components/AccordionItem";
 
 const data = [
-  { title: "Consulta 1", status: "Aguardando" },
-  { title: "Consulta 2", status: "Confirmada" },
-  { title: "Consulta 3", status: "Cancelada" },
-  { title: "Consulta 4", status: "Negada" },
-  { title: "Consulta 5", status: "Finalizada" },
+  { requestName: "Consulta 1", status: "Aguardando" },
+  { requestName: "Consulta 2", status: "Confirmada" },
+  { requestName: "Consulta 3", status: "Cancelada" },
+  { requestName: "Consulta 4", status: "Negada" },
+  { requestName: "Consulta 5", status: "Finalizada" },
 ];
+
+const getColorForStatus = (status: string) => {
+  switch (status) {
+    case "Aguardando":
+      return "blue";
+    case "Confirmada":
+      return "green";
+    case "Cancelada":
+      return "yellow";
+    case "Negada":
+      return "red";
+    case "Finalizada":
+      return "rgba(0, 0, 0, 0.5)";
+    default:
+      return "black";
+  }
+};
 
 export default function AppointmentsScreen() {
   return (
@@ -17,7 +34,11 @@ export default function AppointmentsScreen() {
       <FlashList
         data={data}
         renderItem={({ item }) => (
-          <AccordionItem title={item.title} status={item.status} />
+          <AccordionItem
+          requestName={item.requestName}
+            status={item.status}
+            color={getColorForStatus(item.status)}
+          />
         )}
         estimatedItemSize={200}
       />

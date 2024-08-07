@@ -10,7 +10,7 @@ export function Card({ children, title }: CardProps) {
   return (
     <View
       style={{ elevation: 4 }}
-      className="w-4/5 h-52 flex-shrink-0 rounded-2xl bg-blue shadow-md p-4"
+      className="w-4/5 h-52 flex-shrink-0 rounded-2xl bg-blue-light shadow-md p-4"
     >
       {title && (
         <Text className="text-black text-base font-normal mb-6">{title}</Text>

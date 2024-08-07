@@ -5,12 +5,30 @@ import { Pressable, Text, View } from "react-native";
 import Svg, { Path } from "react-native-svg";
 
 type AccordionItemProps = {
-  title: string;
+  requestName: string;
   status: string;
+  color?: string;
 };
 
-const AccordionItem = ({ title, status }: AccordionItemProps) => {
+const AccordionItem = ({ requestName, status, color = "black" }: AccordionItemProps) => {
   const [expanded, setExpanded] = useState(false);
+
+  const getColorForStatus = (status: string) => {
+    switch (status) {
+      case "Aguardando":
+        return "blue";
+      case "Confirmada":
+        return "green";
+      case "Cancelada":
+        return "orange";
+      case "Negada":
+        return "red";
+      case "Finalizada":
+        return "grey";
+      default:
+        return "black";
+    }
+  };
 
   return (
     <View className="w-full my-3">
@@ -25,7 +43,7 @@ const AccordionItem = ({ title, status }: AccordionItemProps) => {
               fill="#13151A"
             />
           </Svg>
-          <Text className="text-lg font-medium ml-2">{title}</Text>
+          <Text className="text-lg font-medium ml-2">{requestName}</Text>
         </View>
         <Svg
           width="32"
@@ -42,7 +60,10 @@ const AccordionItem = ({ title, status }: AccordionItemProps) => {
       </Pressable>
       {expanded && (
         <View className="p-4 bg-gray-200 rounded-lg mt-2">
-          <Text className="text-base mb-2">Status: {status}</Text>
+          <Text className="text-base mb-2">
+            <Text className="text-black">Status: </Text>
+            <Text style={{ color: getColorForStatus(status) }}>{status}</Text>
+          </Text>
           <Button
             title="Ver Detalhes"
             onPress={() => router.push("/DetailsScreen")}

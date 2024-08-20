@@ -10,7 +10,11 @@ type AccordionItemProps = {
   color?: string;
 };
 
-const AccordionItem = ({ requestName, status, color = "black" }: AccordionItemProps) => {
+const AccordionItem = ({
+  requestName,
+  status,
+  color = "black",
+}: AccordionItemProps) => {
   const [expanded, setExpanded] = useState(false);
 
   const getColorForStatus = (status: string) => {
@@ -66,7 +70,7 @@ const AccordionItem = ({ requestName, status, color = "black" }: AccordionItemPr
           </Text>
           <Button
             title="Ver Detalhes"
-            onPress={() => router.push("/DetailsScreen")}
+            onPress={() => router.push("/(appointments)/DetailsScreen")}
           />
         </View>
       )}

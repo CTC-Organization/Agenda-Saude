@@ -18,12 +18,14 @@
     "@react-native-community/datetimepicker": "8.0.1",
     "@react-navigation/native": "^6.0.2",
     "@shopify/flash-list": "1.6.4",
+    "@tanstack/react-query": "^5.51.23",
     "clsx": "^2.1.1",
     "expo": "~51.0.23",
     "expo-dev-client": "~4.0.21",
     "expo-font": "~12.0.9",
     "expo-linking": "~6.3.1",
     "expo-router": "~3.5.19",
+    "expo-secure-store": "~13.0.2",
     "expo-splash-screen": "~0.27.5",
     "expo-status-bar": "~1.12.1",
     "expo-system-ui": "~3.0.7",
@@ -42,7 +44,8 @@
     "react-native-toast-message": "^2.2.0",
     "react-native-web": "~0.19.10",
     "tailwindcss": "^3.4.6",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zustand": "^4.5.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

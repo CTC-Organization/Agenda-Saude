@@ -28,7 +28,9 @@ function DateInput({ name, control, editable, placeholder }: DateInputProps) {
                 value ? "text-black" : "text-gray-74"
               )}
             >
-              {value || placeholder}
+              {value
+                ? new Date(value).toLocaleDateString("pt-BR")
+                : placeholder}
             </Text>
           </Pressable>
           {show && (
@@ -40,7 +42,7 @@ function DateInput({ name, control, editable, placeholder }: DateInputProps) {
                 setShow(false);
                 const currentDate = selectedDate || date;
                 setDate(currentDate);
-                onChange(currentDate.toLocaleDateString("pt-BR"));
+                onChange(new Date(currentDate).toISOString());
               }}
             />
           )}

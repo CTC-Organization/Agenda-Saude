@@ -1,4 +1,5 @@
 import { colors } from "@/styles/colors";
+import Feather from "@expo/vector-icons/Feather";
 import { Tabs } from "expo-router";
 import { Image } from "react-native";
 
@@ -36,10 +37,10 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="AppointmentsScreen"
+        name="(appointments)"
         options={{
           title: "Marcações",
-          headerTitleAlign: "center",
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <Image
               source={require("@/assets/marcacoes.png")}
@@ -51,26 +52,22 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="ProfileScreen"
+        name="(settings)"
         options={{
-          title: "Perfil",
-          headerTitleAlign: "center",
+          title: "Configurações",
+          headerShown: false,
           tabBarIcon: ({ color }) => (
-            <Image
-              source={require("@/assets/perfil.png")}
-              className="size-full"
+            <Feather
+              name="settings"
+              color={color}
+              size={30}
+              iconStyle={{
+                flex: 1,
+                aspectRatio: 1,
+              }}
               resizeMode="contain"
-              tintColor={color}
             />
           ),
-        }}
-      />
-      <Tabs.Screen
-        name="DetailsScreen"
-        options={{
-          title: "Detalhes da Consulta",
-          headerTitleAlign: "center",
-          tabBarButton: () => null,
         }}
       />
     </Tabs>

@@ -1,10 +1,14 @@
 import { Card } from "@/components/Card";
 import { InfoBox } from "@/components/InfoBox";
 import { NotificationButton } from "@/components/NotificationButton";
+import { useUserStore } from "@/store/userStore";
 import { Text, View } from "react-native";
 
 export default function Home() {
-  const username = "Claúdia";
+  const { user } = useUserStore();
+
+  const username = user?.name || "Usuário";
+
   return (
     <View className="flex-1 justify-start items-center bg-white">
       <View

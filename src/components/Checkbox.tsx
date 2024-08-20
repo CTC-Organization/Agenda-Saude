@@ -3,9 +3,10 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 type Props = {
   text: string;
+  onPress: (isChecked: boolean) => void;
 };
 
-export function Checkbox({ text }: Props) {
+export function Checkbox({ text, onPress }: Props) {
   return (
     <BouncyCheckbox
       size={25}
@@ -18,9 +19,7 @@ export function Checkbox({ text }: Props) {
         color: colors.gray[74],
         textDecorationLine: "none",
       }}
-      onPress={(isChecked: boolean) => {
-        console.log(isChecked);
-      }}
+      onPress={onPress}
     />
   );
 }

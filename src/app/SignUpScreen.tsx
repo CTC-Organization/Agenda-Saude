@@ -1,39 +1,41 @@
+import { login, register } from "@/app/api/auth";
 import { Button } from "@/components/Button";
 import { DateInput } from "@/components/DateInput";
 import { Input } from "@/components/Input";
 import { showToast } from "@/components/Toast";
+import { useUserStore } from "@/store/userStore";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Pressable, Text, View } from "react-native";
 import * as z from "zod";
 
 const schema = z
   .object({
     name: z.string().min(1, "Nome é obrigatório"),
-    date: z
+    birthDate: z
       .string()
       .min(1, "Data de Nascimento é obrigatória")
       .regex(
-        /^\d{2}\/\d{2}\/\d{4}$/,
-        "Data inválida, use o formato dd/mm/yyyy"
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/,
+        "Data inválida, use o formato yyyy-MM-ddTHH:mm:ss.sssZ"
       ),
     cpf: z
       .string()
       .min(1, "CPF é obrigatório")
       .regex(/^\d+$/, "CPF deve conter apenas números")
       .length(11, "CPF deve ter exatamente 11 caracteres"),
-    sus: z
+    susNumber: z
       .string()
       .regex(/^\d+$/, "N° do SUS deve conter apenas números")
       .length(15, "N° do SUS deve ter exatamente 15 caracteres"),
-    phone: z
+    phoneNumber: z
       .string()
       .regex(/^\d{2}9\d{8}$/, "Telefone inválido, use o formato dd9seunúmero")
       .length(11, "N° do SUS deve ter exatamente 15 caracteres"),
     email: z.string().email("E-mail inválido").min(1, "E-mail é obrigatório"),
-    age: z.number().int().positive().min(1, "Idade é obrigatória"),
     password: z.string().min(1, "Senha é obrigatória"),
     confirmPassword: z.string().min(1, "Confirme sua senha"),
   })
@@ -42,33 +44,107 @@ const schema = z
     path: ["confirmPassword"],
   });
 
+type FormData = z.infer<typeof schema>;
+
 export default function Profile() {
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const { setUser, setTokens, setSaveTokens, loadStore } = useUserStore();
 
-  const { control, handleSubmit } = useForm({
-    defaultValues: {
-      name: "",
-      date: "",
-      cpf: "",
-      sus: "",
-      phone: "",
-      email: "",
-      age: 0,
-      password: "",
-      confirmPassword: "",
-    },
+  const { control, handleSubmit } = useForm<FormData>({
     resolver: zodResolver(schema),
+  });
+
+  const mutation = useMutation({
+    mutationFn: async (data: {
+      email: string;
+      cpf: string;
+      password: string;
+      name: string;
+      phoneNumber: string;
+      susNumber: string;
+      birthDate: string;
+    }) => {
+      try {
+        await register(data);
+        const loginData = await login(data.cpf, data.password);
+
+        return {
+          ...loginData,
+          email: data.email,
+          cpf: data.cpf,
+          name: data.name,
+          phoneNumber: data.phoneNumber,
+          susNumber: data.susNumber,
+          birthDate: data.birthDate,
+        };
+      } catch (error) {
+        throw error;
+      }
+    },
+    onSuccess: async (data) => {
+      const {
+        accessToken,
+        id,
+        userId,
+        refreshToken,
+        email,
+        cpf,
+        name,
+        phoneNumber,
+        susNumber,
+        birthDate,
+      } = data;
+
+      await loadStore();
+
+      setUser({
+        userId,
+        id,
+        name,
+        birthDate,
+        cpf,
+        susNumber,
+        phoneNumber,
+        email,
+      });
+      setSaveTokens(true);
+      setTokens({ accessToken, refreshToken });
+
+      showToast("success", "Cadastro efetuado com sucesso", "Seja bem-vindo!");
+      setTimeout(() => {
+        router.replace("/(tabs)/");
+      }, 1000);
+    },
+    onError: (error) => {
+      if (error instanceof Error) {
+        if (error.message.includes("cadastro")) {
+          showToast("error", "Falha no cadastro", error.message);
+        } else if (error.message.includes("login")) {
+          showToast("error", "Falha no login", error.message);
+        } else {
+          showToast(
+            "error",
+            "Falha na operação",
+            "Ocorreu um erro desconhecido."
+          );
+        }
+      } else {
+        showToast(
+          "error",
+          "Falha na operação",
+          "Ocorreu um erro desconhecido."
+        );
+      }
+    },
   });
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
 
-  const handleLogin = () => {
-    showToast("success", "Cadastro efetuado com sucesso", "Seja bem-vindo!");
-    setTimeout(() => {
-      router.replace({ pathname: "/(tabs)" });
-    }, 1000);
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    const { confirmPassword, ...rest } = data;
+    await mutation.mutateAsync(rest);
   };
 
   return (
@@ -79,7 +155,7 @@ export default function Profile() {
         </Input>
         <Input>
           <DateInput
-            name="date"
+            name="birthDate"
             placeholder="Data de Nascimento"
             editable={true}
             control={control}
@@ -96,7 +172,7 @@ export default function Profile() {
         <Input>
           <Input.Field
             control={control}
-            name="sus"
+            name="susNumber"
             placeholder="N° do SUS"
             keyboardType="numeric"
           />
@@ -104,7 +180,7 @@ export default function Profile() {
         <Input>
           <Input.Field
             control={control}
-            name="phone"
+            name="phoneNumber"
             placeholder="Telefone"
             keyboardType="number-pad"
           />
@@ -115,6 +191,7 @@ export default function Profile() {
             name="email"
             placeholder="E-mail"
             keyboardType="email-address"
+            autoCapitalize="none"
           />
         </Input>
         <Input>
@@ -145,7 +222,7 @@ export default function Profile() {
         </Input>
       </View>
       <View className="w-96 justify-center mt-5">
-        <Button title={"Confirmar"} onPress={handleSubmit(handleLogin)} />
+        <Button title={"Confirmar"} onPress={handleSubmit(onSubmit)} />
       </View>
     </View>
   );

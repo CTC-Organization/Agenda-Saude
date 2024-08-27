@@ -1,17 +1,24 @@
-import { Pressable, Text, PressableProps } from "react-native";
+import { Pressable, Image, Linking } from "react-native";
 
-type Props = PressableProps & {
-  title: string;
-};
+export function LocationButton() {
+  const openMaps = () => {
+    const url = "https://www.google.com/maps";
+    Linking.openURL(url).catch((err: Error) =>
+      console.error("Erro ao abrir o mapa", err)
+    );
+  };
 
-export function LocationButton({ title, ...rest }: Props) {
   return (
     <Pressable
       style={{ elevation: 5 }}
-      className="w-4/5 h-14 bg-green-500 items-center justify-center rounded-3xl border-2 border-black my-4"
-      {...rest}
+      className="w-[81px] h-[33px] bg-green-newlight flex-shrink-0 rounded-tl-[50px] rounded-br-[16px] items-center justify-center"
+      onPress={openMaps}
     >
-      <Text className="text-white text-lg font-normal">{title}</Text>
+      <Image
+        source={require('@/assets/localizacao.png')}
+        className="w-[19px] h-[19px]"
+        resizeMode="cover"
+      />
     </Pressable>
   );
 }

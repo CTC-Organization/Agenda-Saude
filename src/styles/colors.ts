@@ -1,9 +1,10 @@
 export const colors = {
   blue: {
-    light: "#d7f4ff",
+    light: "#16B9F8B2",
     dark: "#0000FF",
   },
   green: {
+    newlight: "#80EB80",
     light: "#5DB075",
     dark: "#123331",
   },

@@ -1,5 +1,5 @@
 import { Card } from "@/components/Card";
-import { LocationButton } from "@/components/LocationButton";
+import { LocationButton2 } from "@/components/LocationButton2";
 import { StatusCard } from "@/components/StatusCard";
 import { useUserStore } from "@/store/userStore";
 import { Linking, Text, View } from "react-native";
@@ -40,7 +40,7 @@ export default function DetailsScreen() {
         <StatusCard status={status}></StatusCard>
       </View>
       <View className="items-center">
-        <LocationButton title="Localização" onPress={openMaps} />
+        <LocationButton2 title="Localização" onPress={openMaps} />
       </View>
     </View>
   );

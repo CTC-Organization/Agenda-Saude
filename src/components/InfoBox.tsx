@@ -9,8 +9,8 @@ export function InfoBox({ children }: Props) {
   return (
     <View
       style={{ elevation: 4 }}
-      className="w-52 h-7 shrink-0 rounded-lg bg-white_mod shadow-md 
-      justify-center items-center mb-6"
+      className="w-[272px] h-[28px] flex-shrink-0 rounded-lg bg-white_mod shadow-md 
+      justify-center items-start pl-4 mb-2"
     >
       <Text className="text-black text-xs font-normal leading-5">
         {children}
@@ -18,3 +18,4 @@ export function InfoBox({ children }: Props) {
     </View>
   );
 }
+

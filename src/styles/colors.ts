@@ -1,7 +1,8 @@
 export const colors = {
   blue: {
-    light: "#16B9F8B2",
+    light: "#5CCEFA",
     dark: "#0000FF",
+    turquoise: "#4FD1D9",
   },
   green: {
     newlight: "#80EB80",

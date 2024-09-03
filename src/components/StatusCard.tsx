@@ -29,7 +29,7 @@ export function StatusCard({ status, children }: StatusCardProps) {
             <Text className="text-white font-medium text-center">Editar</Text>
           </Pressable>
           <Pressable
-            className="bg-red-500 flex-1 px-3 py-2 rounded-lg mx-1"
+            className="bg-red-500 flex-1 px-2 py-2 rounded-lg mx-1"
             onPress={() => console.log("Cancelar")}
           >
             <Text className="text-white font-medium text-center">Cancelar</Text>

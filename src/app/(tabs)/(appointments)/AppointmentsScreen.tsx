@@ -1,47 +1,39 @@
 import { FlashList } from "@shopify/flash-list";
-import { Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import AccordionItem from "@/components/AccordionItem";
+import { useUserStore } from "@/store/userStore";
 
 const data = [
-  { requestName: "Consulta 1", status: "Aguardando" },
-  { requestName: "Consulta 2", status: "Confirmada" },
-  { requestName: "Consulta 3", status: "Cancelada" },
-  { requestName: "Consulta 4", status: "Negada" },
-  { requestName: "Consulta 5", status: "Finalizada" },
+  { title: "Médico Oftalmologista", date: "17 abril 2025, 13 h - 14 h" },
+  { title: "Médico Cardiologista", date: "20 abril 2025, 10 h - 11 h" },
+  { title: "Médico Dermatologista", date: "25 abril 2025, 09 h - 10 h" },
 ];
 
-const getColorForStatus = (status: string) => {
-  switch (status) {
-    case "Aguardando":
-      return "blue";
-    case "Confirmada":
-      return "green";
-    case "Cancelada":
-      return "yellow";
-    case "Negada":
-      return "red";
-    case "Finalizada":
-      return "rgba(0, 0, 0, 0.5)";
-    default:
-      return "black";
-  }
-};
-
 export default function AppointmentsScreen() {
+  const { user } = useUserStore();
+  const username = user?.name || "Usuário";
+
   return (
-    <View className="flex-1 bg-white p-4">
-      <Text className="text-2xl font-bold mb-4">Minhas Requisições</Text>
-      <FlashList
-        data={data}
-        renderItem={({ item }) => (
-          <AccordionItem
-          requestName={item.requestName}
-            status={item.status}
-            color={getColorForStatus(item.status)}
-          />
-        )}
-        estimatedItemSize={200}
-      />
-    </View>
+    <ScrollView className="flex-1 bg-white">
+      <View className="w-full mt-8 justify-center items-center">
+        <Text className="text-black text-2xl font-bold">
+          Olá, {username}
+        </Text>
+      </View>
+
+      <View className="p-10">
+        <Text className="text-xl font-medium text-gray-74 mb-4">Minhas Consultas:</Text>
+        <FlashList
+          data={data}
+          renderItem={({ item }) => (
+            <AccordionItem
+              title={item.title}
+              date={item.date}
+            />
+          )}
+          estimatedItemSize={200}
+        />
+      </View>
+    </ScrollView>
   );
 }

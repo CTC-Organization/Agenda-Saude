@@ -46,7 +46,7 @@ const AccordionItem = ({ title, date }: AccordionItemProps) => {
             </View>
           ) : (
             <View className="flex-row items-center">
-              <DoctorIcon width={36} height={36.918} />
+              <DoctorIcon width={36} height={36} />
               <View className="ml-3">
                 <Text className="text-black text-[13px] font-normal">
                   {title}
@@ -62,30 +62,29 @@ const AccordionItem = ({ title, date }: AccordionItemProps) => {
           <ArrowIcon
             width={20}
             height={20}
-            style={{ transform: [{ rotate: expanded ? "180deg" : "0deg" }] }}
+            className={`transform ${
+              expanded ? "rotate-180" : "rotate-0"
+            }`}
           />
         </Pressable>
       </Pressable>
 
       {/* Conteúdo Expandido */}
       {expanded && (
-        <View
-          className="w-[305px] h-[121.275px] bg-white rounded-b-[16px] p-4 mt-0"
-          style={{ elevation: 4 }}
-        >
+        <View className="w-[305px] h-[121.275px] bg-white rounded-b-[16px] p-4 mt-0" style={{ elevation: 4 }}>
           <View className="flex-row justify-between mt-1">
             <View className="flex-row items-center ms-3">
-              <DoctorIcon width={36} height={36.918} />
+              <DoctorIcon width={36} height={36} />
               <Text className="ml-3 text-black text-[13px] font-normal">
                 Médico{"\n"}{specialty}
               </Text>
             </View>
             <View className="items-center me-3">
               <Pressable onPress={() => router.push("/(appointments)/DetailsScreen")}>
-                <CirculoIcon width={16} height={16} fill="#4FD1D9" />
+                <CirculoIcon width={16} height={16} />
                 <DetalhesIcon
                   width={2.5}
-                  height={9.9}
+                  height={10}
                   style={{
                     position: "absolute",
                     left: 6.75,
@@ -100,43 +99,15 @@ const AccordionItem = ({ title, date }: AccordionItemProps) => {
           <View className="flex-row justify-center mt-6">
             <Button3
               title="Aceitar"
-              onPress={() => {
-                /* ação de aceitar */
-              }}
-              style={{
-                width: 120,
-                height: 20,
-                backgroundColor: "#5CCEFA",
-                borderColor: "#39C4FA",
-                borderWidth: 1,
-                borderRadius: 16,
-              }}
-              textStyle={{
-                color: "#FFF",
-                fontSize: 10,
-                textAlign: "center",
-                lineHeight: 10,
-              }}
+              onPress={() => console.log("Aceitar")}
+              className="w-[120px] h-[20px] bg-blue-light border border-blue-border rounded-[16px]"
+              textClassName="text-white text-[10px] text-center leading-[10px]"
             />
             <Button3
               title="Rejeitar"
-              onPress={() => {
-                /* ação de rejeitar */
-              }}
-              style={{
-                width: 60,
-                height: 20,
-                backgroundColor: "#F6F6F6",
-                borderColor: "#E8E8E8",
-                borderWidth: 1,
-                borderRadius: 16,
-              }}
-              textStyle={{
-                color: "#BDBDBD",
-                fontSize: 10,
-                textAlign: "center",
-                lineHeight: 10,
-              }}
+              onPress={() => console.log("Rejeitar")}
+              className="w-[60px] h-[20px] bg-gray-95 border border-gray-border rounded-[16px]"
+              textClassName="text-gray-74 text-[10px] text-center leading-[10px]"
             />
           </View>
         </View>

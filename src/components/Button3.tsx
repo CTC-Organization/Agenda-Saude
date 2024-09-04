@@ -3,18 +3,17 @@ import { Pressable, Text } from "react-native";
 type Button3Props = {
   title: string;
   onPress: () => void;
-  style: object;
-  textStyle: object;
+  className?: string;
+  textClassName?: string;
 };
 
-const Button3 = ({ title, onPress, style, textStyle }: Button3Props) => {
+const Button3 = ({ title, onPress, className, textClassName }: Button3Props) => {
   return (
     <Pressable
       onPress={onPress}
-      className="me-5 items-center justify-center"
-      style={style}
+      className={`me-4 ms-4 items-center justify-center ${className}`}
     >
-      <Text style={textStyle}>{title}</Text>
+      <Text className={textClassName}>{title}</Text>
     </Pressable>
   );
 };

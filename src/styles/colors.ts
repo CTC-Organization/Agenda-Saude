@@ -7,7 +7,7 @@ export const colors = {
   },
   green: {
     newlight: "#80EB80",
-    light: "#5DB075",
+    light: "#58B678",
     dark: "#123331",
   },
   gray: {

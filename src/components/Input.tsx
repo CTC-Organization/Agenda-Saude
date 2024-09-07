@@ -7,7 +7,7 @@ function Input({ children }: { children: ReactNode }) {
   return (
     <View
       className="w-full h-12 flex-row items-center gap-3 px-3 border 
-    border-gray-91 bg-gray-95 rounded-md"
+    border-InputBorder bg-InputBackground rounded-md"
     >
       {children}
     </View>
@@ -30,8 +30,8 @@ function Field({ name, control, ...rest }: FieldProps) {
       }) => (
         <>
           <TextInput
-            className="flex-1 text-base font-normal"
-            placeholderTextColor={colors.gray[74]}
+            className="flex-1 font-regular text-base font-normal"
+            placeholderTextColor={colors.TextSecondary}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}

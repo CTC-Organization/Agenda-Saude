@@ -1,19 +1,30 @@
+import { showToast } from "@/components/Toast";
+import { ToggleTheme } from "@/components/ToggleTheme";
 import { useUserStore } from "@/store/userStore";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { useState } from "react";
-import { Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 export default function Profile() {
   const [notifications, setNotifications] = useState(false);
   const [darkmodeenabled, setDarkmodeenabled] = useState(false);
 
-  const { user } = useUserStore();
+  const { user, clearStore } = useUserStore();
 
   const username = user?.name || "Usuário";
   const userId = user?.userId;
+
+  const handleLogout = async () => {
+    await clearStore();
+    showToast("success", "Até logo!", "Você saiu com sucesso. Volte sempre!");
+
+    setTimeout(() => {
+      router.replace("/");
+    }, 1000);
+  };
 
   return (
     <View className="flex-1 bg-white items-start p-8">
@@ -45,31 +56,20 @@ export default function Profile() {
           )}
           <Text>Notificações</Text>
         </Link>
-        <Link
-          href={"/(settings)/EditAccountScreen"}
-          className="flex-row items-center gap-9"
-        >
-          {darkmodeenabled ? (
-            <MaterialIcons name="dark-mode" size={24} color="black" />
-          ) : (
-            <MaterialIcons name="light-mode" size={24} color="black" />
-          )}
-          <Text>Modo Escuro</Text>
-        </Link>
-        <Link
-          href={"/(settings)/EditAccountScreen"}
-          className="flex-row items-center gap-9"
-        >
+        <View className="w-full items-center justify-center ">
+          <ToggleTheme />
+        </View>
+        <Link href={"/SignUpScreen"} className="flex-row items-center gap-9">
           <MaterialIcons name="help" size={24} color="black" />
           <Text>FAQ</Text>
         </Link>
-        <Link
-          href={"/(settings)/EditAccountScreen"}
-          className="flex-row items-center gap-9"
+        <Pressable
+          onPress={handleLogout}
+          className="flex-row items-center gap-3"
         >
           <AntDesign name="logout" size={24} color="black" />
           <Text>Sair</Text>
-        </Link>
+        </Pressable>
       </View>
     </View>
   );

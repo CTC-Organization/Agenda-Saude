@@ -1,13 +1,13 @@
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
-export async function login(cpf: string, password: string) {
+export async function login(email: string, password: string) {
   try {
     const response = await fetch(`${API_URL}auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ cpf, password }),
+      body: JSON.stringify({ email, password }),
     });
 
     if (!response.ok) {

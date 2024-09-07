@@ -1,12 +1,10 @@
-import { Pressable, Text, View } from "react-native";
-import DoctorIcon from "@/assets/medico.svg";
-import RelogioIcon from "@/assets/relogio-quadrado.svg";
-import ArrowIcon from "@/assets/seta-baixo.svg";
-import CirculoIcon from "@/assets/circulo-azul.svg";
-import DetalhesIcon from "@/assets/detalhes.svg";
-import Button3 from "@/components/Button3";
-import { useState } from "react";
+import { Button } from "@/components/Button";
+import { colors } from "@/styles/colors";
+import Feather from "@expo/vector-icons/Feather";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { router } from "expo-router";
+import { useState } from "react";
+import { Pressable, Text, View } from "react-native";
 
 type AccordionItemProps = {
   title: string;
@@ -22,7 +20,7 @@ const AccordionItem = ({ title, date }: AccordionItemProps) => {
       {/* Corpo do Accordion */}
       <Pressable
         className={`h-[47px] rounded-t-[16px] flex-row justify-between items-center ${
-          expanded ? "bg-blue-light" : "bg-white"
+          expanded ? "bg-ButtonBackground" : "bg-white"
         }`}
         style={{
           elevation: 4,
@@ -34,24 +32,24 @@ const AccordionItem = ({ title, date }: AccordionItemProps) => {
         <View className="flex-row items-center ms-3">
           {expanded ? (
             <View className="ml-3">
-              <Text className="text-white text-[13px] font-normal">
+              <Text className="font-regular font-normal text-white text-[13px]">
                 Requisição de consulta
               </Text>
               <View className="flex-row items-center">
-                <RelogioIcon width={14} height={14} />
-                <Text className="text-white text-[10.5px] font-normal ml-1">
+                <FontAwesome6 name="clock" size={14} color="white" />
+                <Text className="font-regular font-normal text-white text-[10.5px] ml-1">
                   {date}
                 </Text>
               </View>
             </View>
           ) : (
             <View className="flex-row items-center">
-              <DoctorIcon width={36} height={36} />
+              <FontAwesome6 name="user-doctor" size={36} color="black" />
               <View className="ml-3">
-                <Text className="text-black text-[13px] font-normal">
+                <Text className="font-regular font-normal text-black text-[13px]">
                   {title}
                 </Text>
-                <Text className="text-gray-400 text-[12px] font-normal">
+                <Text className="font-regular font-normal text-TextSecondary text-[12px]">
                   {date}
                 </Text>
               </View>
@@ -59,56 +57,65 @@ const AccordionItem = ({ title, date }: AccordionItemProps) => {
           )}
         </View>
         <Pressable onPress={() => setExpanded(!expanded)} className="mr-2">
-          <ArrowIcon
-            width={20}
-            height={20}
-            className={`transform ${
-              expanded ? "rotate-180" : "rotate-0"
-            }`}
+          <FontAwesome6
+            name={`chevron-${expanded ? "up" : "down"}`}
+            size={20}
+            color="black"
           />
         </Pressable>
       </Pressable>
 
       {/* Conteúdo Expandido */}
       {expanded && (
-        <View className="w-[305px] h-[121.275px] bg-white rounded-b-[16px] p-4 mt-0" style={{ elevation: 4 }}>
+        <View
+          className="w-[305px] h-[121.275px] bg-white rounded-b-[16px] p-4 mt-0"
+          style={{ elevation: 4 }}
+        >
           <View className="flex-row justify-between mt-1">
             <View className="flex-row items-center ms-3">
-              <DoctorIcon width={36} height={36} />
-              <Text className="ml-3 text-black text-[13px] font-normal">
-                Médico{"\n"}{specialty}
+              <FontAwesome6 name="user-doctor" size={36} color="black" />
+              <Text className="font-regular font-normal text-black text-[13px] ml-3">
+                Médico{"\n"}
+                {specialty}
               </Text>
             </View>
             <View className="items-center me-3">
-              <Pressable onPress={() => router.push("/(appointments)/DetailsScreen")}>
-                <CirculoIcon width={16} height={16} />
-                <DetalhesIcon
-                  width={2.5}
-                  height={10}
-                  style={{
-                    position: "absolute",
-                    left: 6.75,
-                    top: 3.05,
-                  }}
+              <Pressable
+                onPress={() => router.push("/(appointments)/DetailsScreen")}
+              >
+                <Feather
+                  name="info"
+                  size={24}
+                  color={colors.ButtonBackground}
                 />
               </Pressable>
-              <Text className="text-gray-400 text-[10px] mt-1">Detalhes</Text>
+              <Text className="font-regular font-normal text-TextSecondary text-[10px] mt-1">
+                Detalhes
+              </Text>
             </View>
           </View>
 
-          <View className="flex-row justify-center mt-6">
-            <Button3
-              title="Aceitar"
-              onPress={() => console.log("Aceitar")}
-              className="w-[120px] h-[20px] bg-blue-light border border-blue-border rounded-[16px]"
-              textClassName="text-white text-[10px] text-center leading-[10px]"
-            />
-            <Button3
-              title="Rejeitar"
-              onPress={() => console.log("Rejeitar")}
-              className="w-[60px] h-[20px] bg-gray-95 border border-gray-border rounded-[16px]"
-              textClassName="text-gray-74 text-[10px] text-center leading-[10px]"
-            />
+          <View className="flex-1 flex-row justify-center gap-5 mt-3 px-10">
+            <View className="w-7/12 items-center justify-center">
+              <Button
+                title="Aceitar"
+                onPress={() => console.log("Aceitar")}
+                backgroundColor={colors.ButtonBackground}
+                color={colors.ButtonText}
+                size={"h-10 w-40"}
+                border={"rounded-2xl border border-ButtonBorder"}
+              />
+            </View>
+            <View className="w-5/12 items-center justify-center">
+              <Button
+                title="Rejeitar"
+                onPress={() => console.log("Rejeitar")}
+                backgroundColor={colors.SecondaryButtonBackground}
+                color={colors.TextSecondary}
+                size={"h-10 w-24"}
+                border={"rounded-2xl border border-SecondaryButtonBorder"}
+              />
+            </View>
           </View>
         </View>
       )}

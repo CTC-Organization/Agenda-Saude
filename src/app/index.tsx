@@ -5,6 +5,7 @@ import { Checkbox } from "@/components/Checkbox";
 import { Input } from "@/components/Input";
 import { showToast } from "@/components/Toast";
 import { useUserStore } from "@/store/userStore";
+import { colors } from "@/styles/colors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Link, router } from "expo-router";
@@ -21,10 +22,7 @@ import {
 import * as z from "zod";
 
 const schema = z.object({
-  cpf: z
-    .string()
-    .min(1, "CPF é obrigatório")
-    .length(11, "CPF deve ter exatamente 11 caracteres"),
+  email: z.string().email("E-mail inválido").min(1, "E-mail é obrigatório"),
   password: z.string().min(1, "Senha é obrigatória"),
 });
 
@@ -37,7 +35,7 @@ export default function Login() {
 
   const { control, handleSubmit } = useForm<FormData>({
     defaultValues: {
-      cpf: "",
+      email: "",
       password: "",
     },
     resolver: zodResolver(schema),
@@ -45,13 +43,13 @@ export default function Login() {
 
   const mutation = useMutation({
     mutationFn: async ({
-      cpf,
+      email,
       password,
     }: {
-      cpf: string;
+      email: string;
       password: string;
     }) => {
-      const loginData = await login(cpf, password);
+      const loginData = await login(email, password);
       const { accessToken, refreshToken, id, userId } = loginData;
 
       await loadStore();
@@ -63,23 +61,14 @@ export default function Login() {
       return { id, userId, ...patientData };
     },
     onSuccess: async (data) => {
-      const {
-        id,
-        userId,
-        email,
-        cpf,
-        name,
-        phoneNumber,
-        susNumber,
-        birthDate,
-      } = data;
+      const { id, userId, email, name, phoneNumber, susNumber, birthDate } =
+        data;
 
       setUser({
         userId,
         id,
         name,
         birthDate,
-        cpf,
         susNumber,
         phoneNumber,
         email,
@@ -88,7 +77,7 @@ export default function Login() {
       showToast("success", "Login efetuado com sucesso", "Seja bem-vindo!");
 
       setTimeout(() => {
-        router.replace("/(tabs)/");
+        router.replace("/HomeScreen");
       }, 1000);
     },
     onError: (error) => {
@@ -115,14 +104,15 @@ export default function Login() {
         contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
         keyboardShouldPersistTaps="handled"
       >
-        <View className="flex-1 bg-white items-center justify-center p-8">
+        <View className="flex-1 items-center justify-center p-8 bg-Background dark:bg-gray-800">
           <View className="w-full gap-3">
             <Input>
               <Input.Field
                 control={control}
-                name="cpf"
-                placeholder="Digite seu CPF"
-                keyboardType="numeric"
+                name="email"
+                placeholder="Digite seu E-mail"
+                keyboardType="email-address"
+                autoCapitalize="none"
               />
             </Input>
             <Input>
@@ -133,7 +123,7 @@ export default function Login() {
                 secureTextEntry={!passwordVisible}
               />
               <Pressable onPress={togglePasswordVisibility}>
-                <Text className="text-green-light">
+                <Text className="font-regular text-base font-normal text-LinkText">
                   {passwordVisible ? "Esconder" : "Mostrar"}
                 </Text>
               </Pressable>
@@ -146,7 +136,9 @@ export default function Login() {
             </View>
             <View className="w-full items-end justify-end">
               <Link href={"/ForgotPasswordScreen"}>
-                <Text className="text-sky-500">Esqueci minha senha</Text>
+                <Text className="font-regular text-base font-normal text-LinkText">
+                  Esqueci minha senha
+                </Text>
               </Link>
             </View>
           </View>
@@ -156,17 +148,20 @@ export default function Login() {
               title="Fazer Login"
               onPress={handleSubmit(onSubmit)}
               isLoading={mutation.isPending}
+              backgroundColor={colors.ButtonBackground}
+              color={colors.ButtonText}
+              size={"h-16 w-full"}
+              border="rounded-2xl border border-ButtonBorder"
             />
           </View>
           <View className="w-full flex-row flex-wrap items-center justify-center gap-2">
-            <Text>Ainda não possui uma conta?</Text>
+            <Text className="font-regular text-base font-normal text-TextPrimary dark:text-white">
+              Ainda não possui uma conta?
+            </Text>
             <Link href={"/SignUpScreen"}>
-              <Text className="text-sky-500">Cadastre-se</Text>
-            </Link>
-          </View>
-          <View>
-            <Link href={"/(settings)/SettingsScreen"}>
-              <Text className="text-red-700">TESTE: Tela de Perfil</Text>
+              <Text className="font-regular text-base font-normal text-LinkText">
+                Cadastre-se
+              </Text>
             </Link>
           </View>
         </View>

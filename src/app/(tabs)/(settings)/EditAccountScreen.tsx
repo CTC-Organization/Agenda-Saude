@@ -3,6 +3,7 @@ import { DateInput } from "@/components/DateInput";
 import { Input } from "@/components/Input";
 import { showToast } from "@/components/Toast";
 import { useUserStore } from "@/store/userStore";
+import { colors } from "@/styles/colors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -18,11 +19,6 @@ const schema = z.object({
       /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/,
       "Data inválida, use o formato yyyy-MM-ddTHH:mm:ss.sssZ"
     ),
-  cpf: z
-    .string()
-    .min(1, "CPF é obrigatório")
-    .regex(/^\d+$/, "CPF deve conter apenas números")
-    .length(11, "CPF deve ter exatamente 11 caracteres"),
   susNumber: z
     .string()
     .regex(/^\d+$/, "N° do SUS deve conter apenas números")
@@ -45,7 +41,6 @@ export default function Profile() {
 
   setValue("name", user?.name || "");
   setValue("birthDate", user?.birthDate || "");
-  setValue("cpf", user?.cpf || "");
   setValue("susNumber", user?.susNumber || "");
   setValue("phoneNumber", user?.phoneNumber || "");
   setValue("email", user?.email || "");
@@ -126,6 +121,10 @@ export default function Profile() {
         <Button
           title={editable ? "Confirmar" : "Editar informações"}
           onPress={handleEdit}
+          backgroundColor={colors.ButtonBackground}
+          color={colors.ButtonText}
+          size={"h-16 w-full"}
+          border="rounded-2xl"
         />
       </View>
     </View>

@@ -20,18 +20,25 @@ function DateInput({ name, control, editable, placeholder }: DateInputProps) {
       control={control}
       name={name}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
-        <View className="flex-1 flex-row items-center justify-between">
+        <View className="flex-1">
           <Pressable onPress={() => setShow(true)} disabled={!editable}>
-            <Text
-              className={clsx(
-                "text-base font-normal",
-                value ? "text-black" : "text-gray-74"
+            <View className="flex-row items-center justify-between">
+              <Text
+                className={clsx(
+                  "font-regular text-base font-normal",
+                  value ? "text-black" : "text-TextSecondary"
+                )}
+              >
+                {value
+                  ? new Date(value).toLocaleDateString("pt-BR")
+                  : placeholder}
+              </Text>
+              {error && (
+                <Text className="font-regular text-xs font-normal text-red-600">
+                  {error.message}
+                </Text>
               )}
-            >
-              {value
-                ? new Date(value).toLocaleDateString("pt-BR")
-                : placeholder}
-            </Text>
+            </View>
           </Pressable>
           {show && (
             <DateTimePicker
@@ -45,9 +52,6 @@ function DateInput({ name, control, editable, placeholder }: DateInputProps) {
                 onChange(new Date(currentDate).toISOString());
               }}
             />
-          )}
-          {error && (
-            <Text className="text-red-600 text-xs">{error.message}</Text>
           )}
         </View>
       )}

@@ -4,6 +4,7 @@ import { DateInput } from "@/components/DateInput";
 import { Input } from "@/components/Input";
 import { showToast } from "@/components/Toast";
 import { useUserStore } from "@/store/userStore";
+import { colors } from "@/styles/colors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { router } from "expo-router";
@@ -51,6 +52,16 @@ export default function Profile() {
   const { setUser, setTokens, setSaveTokens, loadStore } = useUserStore();
 
   const { control, handleSubmit } = useForm<FormData>({
+    defaultValues: {
+      name: "",
+      birthDate: "",
+      cpf: "",
+      susNumber: "",
+      phoneNumber: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
     resolver: zodResolver(schema),
   });
 
@@ -66,12 +77,11 @@ export default function Profile() {
     }) => {
       try {
         await register(data);
-        const loginData = await login(data.cpf, data.password);
+        const loginData = await login(data.email, data.password);
 
         return {
           ...loginData,
           email: data.email,
-          cpf: data.cpf,
           name: data.name,
           phoneNumber: data.phoneNumber,
           susNumber: data.susNumber,
@@ -88,7 +98,6 @@ export default function Profile() {
         userId,
         refreshToken,
         email,
-        cpf,
         name,
         phoneNumber,
         susNumber,
@@ -102,7 +111,6 @@ export default function Profile() {
         id,
         name,
         birthDate,
-        cpf,
         susNumber,
         phoneNumber,
         email,
@@ -112,7 +120,7 @@ export default function Profile() {
 
       showToast("success", "Cadastro efetuado com sucesso", "Seja bem-vindo!");
       setTimeout(() => {
-        router.replace("/(tabs)/");
+        router.replace("/HomeScreen");
       }, 1000);
     },
     onError: (error) => {
@@ -148,7 +156,7 @@ export default function Profile() {
   };
 
   return (
-    <View className="flex-1 bg-white items-center">
+    <View className="flex-1 bg-white dark:bg-gray-800 items-center">
       <View className="w-11/12 gap-5 justify-center mt-8">
         <Input>
           <Input.Field control={control} name="name" placeholder="Nome" />
@@ -202,7 +210,7 @@ export default function Profile() {
             secureTextEntry={!passwordVisible}
           />
           <Pressable onPress={togglePasswordVisibility}>
-            <Text className="text-green-light">
+            <Text className="font-regular text-base font-normal text-LinkText">
               {passwordVisible ? "Esconder" : "Mostrar"}
             </Text>
           </Pressable>
@@ -215,14 +223,24 @@ export default function Profile() {
             secureTextEntry={!passwordVisible}
           />
           <Pressable onPress={togglePasswordVisibility}>
-            <Text className="text-green-light">
+            <Text className="font-regular text-base font-normal text-LinkText">
               {passwordVisible ? "Esconder" : "Mostrar"}
             </Text>
           </Pressable>
         </Input>
       </View>
-      <View className="w-96 justify-center mt-5">
-        <Button title={"Confirmar"} onPress={handleSubmit(onSubmit)} />
+      <View className="flex-1 items-center justify-center">
+        <View className="w-96 justify-center">
+          <Button
+            title={"Confirmar"}
+            onPress={handleSubmit(onSubmit)}
+            isLoading={mutation.isPending}
+            backgroundColor={colors.ButtonBackground}
+            color={colors.ButtonText}
+            size={"h-16 w-full"}
+            border="rounded-2xl"
+          />
+        </View>
       </View>
     </View>
   );

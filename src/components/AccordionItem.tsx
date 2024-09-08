@@ -103,7 +103,6 @@ const AccordionItem = ({ title, date }: AccordionItemProps) => {
                 backgroundColor={colors.ButtonBackground}
                 color={colors.ButtonText}
                 size={"h-10 w-40"}
-                border={"rounded-2xl border border-ButtonBorder"}
               />
             </View>
             <View className="w-5/12 items-center justify-center">

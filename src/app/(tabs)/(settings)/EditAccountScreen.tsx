@@ -7,9 +7,10 @@ import { colors } from "@/styles/colors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { View } from "react-native";
+import { View, Image } from "react-native";
 import * as z from "zod";
 
+// Definindo o esquema de validação
 const schema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
   birthDate: z
@@ -32,7 +33,18 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-export default function Profile() {
+const UserImage = () => {
+  return (
+    <View className="w-[122px] h-[122px] rounded-full border-[0px] border-white dark:border-gray-800 bg-[#F6F6F6] dark:bg-gray-700 overflow-hidden relative">
+      <Image
+        source={require("@/assets/foto.png")}
+        className="w-full h-full object-cover"
+      />
+    </View>
+  );
+};
+
+export default function EditAccountScreen() {
   const [editable, setEditable] = useState(false);
   const { user } = useUserStore();
   const { control, handleSubmit, setValue } = useForm<FormData>({
@@ -62,7 +74,20 @@ export default function Profile() {
   };
 
   return (
-    <View className="flex-1 bg-white items-center">
+    <View className="flex-1 bg-white dark:bg-gray-800 items-center">
+      <View className="mt-4">
+        <UserImage />
+      </View>
+      <View className="mt-[20px]">
+        <Button
+          title="Alterar imagem"
+          backgroundColor="#5DB075"
+          color="#FFF"
+          size="h-12 w-40"
+          border="rounded-2xl"
+          onPress={() => console.log("Alterar imagem")}
+        />
+      </View>
       <View className="w-11/12 gap-5 justify-center mt-8">
         <Input>
           <Input.Field
@@ -70,12 +95,13 @@ export default function Profile() {
             name="name"
             placeholder="Nome"
             editable={editable}
+            className="text-black dark:text-white"
           />
         </Input>
         <Input>
           <DateInput
             control={control}
-            name="date"
+            name="birthDate"
             placeholder="Data de Nascimento"
             editable={editable}
           />
@@ -87,6 +113,7 @@ export default function Profile() {
             placeholder="CPF"
             editable={editable}
             keyboardType="numeric"
+            className="text-black dark:text-white"
           />
         </Input>
         <Input>
@@ -96,6 +123,7 @@ export default function Profile() {
             placeholder="N° do SUS"
             editable={editable}
             keyboardType="numeric"
+            className="text-black dark:text-white"
           />
         </Input>
         <Input>
@@ -105,6 +133,7 @@ export default function Profile() {
             placeholder="Telefone"
             editable={editable}
             keyboardType="number-pad"
+            className="text-black dark:text-white"
           />
         </Input>
         <Input>
@@ -114,6 +143,7 @@ export default function Profile() {
             placeholder="E-mail"
             editable={editable}
             keyboardType="email-address"
+            className="text-black dark:text-white"
           />
         </Input>
       </View>

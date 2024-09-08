@@ -104,7 +104,7 @@ export default function Login() {
         contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
         keyboardShouldPersistTaps="handled"
       >
-        <View className="flex-1 items-center justify-center p-8 bg-Background dark:bg-gray-800">
+        <View className="flex-1 items-center justify-center p-8 bg-white dark:bg-gray-800">
           <View className="w-full gap-3">
             <Input>
               <Input.Field

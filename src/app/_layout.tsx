@@ -37,7 +37,7 @@ export default function Layout() {
           className="flex-1 absolute top-80 bottom-0 inset-x-0 items-center justify-center"
           style={{ zIndex: 999 }}
         >
-          <Loading size={"large"} />
+          <Loading />
         </View>
       </>
     );

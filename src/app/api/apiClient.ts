@@ -3,16 +3,27 @@ import { useUserStore } from '@/store/userStore';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
-const fetchWithAuth = async (endpoint: string, options: RequestInit = {}) => {
+const fetchWithAuth = async (
+  endpoint: string,
+  method: string = 'GET',
+  body: any = null,
+  contentType: string = 'application/json',
+) => {
   const { tokens } = useUserStore.getState();
 
-  // Adiciona o token de acesso no header, se disponível
+  const headers: HeadersInit = {
+    'Content-Type': contentType,
+  };
+
   if (tokens?.accessToken) {
-    options.headers = {
-      ...options.headers,
-      Authorization: `Bearer ${tokens.accessToken}`,
-    };
+    headers['Authorization'] = `Bearer ${tokens.accessToken}`;
   }
+
+  const options: RequestInit = {
+    method,
+    headers,
+    body: body ? (contentType === 'application/json' ? JSON.stringify(body) : body) : undefined,
+  };
 
   try {
     const response = await fetch(`${API_URL}${endpoint}`, options);
@@ -27,28 +38,18 @@ const fetchWithAuth = async (endpoint: string, options: RequestInit = {}) => {
       const newTokens = await refreshToken(tokens.refreshToken);
       useUserStore.getState().setTokens(newTokens);
 
-      // Repetir a requisição com o novo token
-      options.headers = {
-        ...options.headers,
-        Authorization: `Bearer ${newTokens.accessToken}`,
-      };
-
-      const retryResponse = await fetch(`${API_URL}${endpoint}`, options);
-
-      if (!retryResponse.ok) {
-        throw new Error('Resposta da rede não deu certo');
-      }
-
-      return retryResponse.json();
+      // Reenvia a requisição com o novo token
+      headers['Authorization'] = `Bearer ${newTokens.accessToken}`;
+      const retryResponse = await fetch(`${API_URL}${endpoint}`, {
+        ...options,
+        headers,
+      });
+      return await retryResponse.json();
     }
 
-    if (!response.ok) {
-      throw new Error('Resposta da rede não deu certo');
-    }
-
-    return response.json();
+    return await response.json();
   } catch (error) {
-    console.error('Fetch error:', error);
+    console.error('Erro ao realizar requisição:', error);
     throw error;
   }
 };

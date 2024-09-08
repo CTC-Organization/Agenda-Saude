@@ -13,14 +13,23 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.lukajlp.AgendaSaude"
+      "bundleIdentifier": "com.lukajlp.AgendaSaude",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Este aplicativo precisa acessar sua câmera para tirar fotos.",
+        "NSPhotoLibraryUsageDescription": "Este aplicativo precisa acessar sua galeria de fotos para selecionar imagens."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#58B678"
       },
-      "package": "com.lukajlp.AgendaSaude"
+      "package": "com.lukajlp.AgendaSaude",
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -29,7 +38,14 @@
     },
     "plugins": [
       "expo-router",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "O aplicativo precisa acessar suas fotos para que você possa compartilhá-las.",
+          "cameraPermission": "O aplicativo precisa acessar sua câmera para tirar fotos."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

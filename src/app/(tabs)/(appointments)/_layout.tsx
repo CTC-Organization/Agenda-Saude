@@ -15,7 +15,7 @@ export default function Layout() {
         <Stack.Screen
           name="HomeScreen"
           options={{
-            title: "Marcações",
+            title: "Página Inicial",
             headerStyle: { backgroundColor: headerBackgroundColor },
             headerTintColor: titleColor,
             headerShadowVisible: false,

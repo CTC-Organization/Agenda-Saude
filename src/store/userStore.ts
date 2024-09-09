@@ -53,34 +53,46 @@ const useUserStore = create<UserState>((set) => ({
     });
   },
   setTokens: async (tokens) => {
-    // Atualizar o estado e salvar os tokens no SecureStore
+    // Atualizar o estado e armazenar tokens com base na configuração de salvar tokens
     set((state) => {
       const newTokens = { ...state.tokens, ...tokens };
-      if (newTokens) {
+
+      if (state.saveTokens) {
+        // Se saveTokens é true, salve ou atualize os tokens no SecureStore
         if (newTokens.accessToken) {
-          saveSecureData('tokens', JSON.stringify({ accessToken: newTokens.accessToken }));
+          saveSecureData('tokens', JSON.stringify({
+            accessToken: newTokens.accessToken,
+            refreshToken: newTokens.refreshToken || state.tokens?.refreshToken // Atualiza o refreshToken
+          }));
         } else {
+          // Se accessToken não está presente, remova os tokens
           deleteSecureData('tokens');
           return { tokens: null };
         }
-        if (state.saveTokens && newTokens.refreshToken) {
-          saveSecureData('tokens', JSON.stringify({ 
+      } else {
+        // Se saveTokens é false, salve ou atualize os tokens apenas no estado
+        if (newTokens.accessToken) {
+          // Armazena temporariamente no estado
+          set({ tokens: {
             accessToken: newTokens.accessToken,
-            refreshToken: newTokens.refreshToken }));
+            refreshToken: newTokens.refreshToken || state.tokens?.refreshToken
+          } });
+        } else {
+          // Se accessToken não está presente, remova os tokens
+          set({ tokens: null });
         }
-        return { tokens: newTokens };
       }
-      deleteSecureData('tokens');
-      return { tokens: null };
+      
+      return { tokens: newTokens };
     });
-  },
+  },  
   setSaveTokens: async (save) => {
-    // Atualizar o estado para indicar se os tokens devem ser salvos
     set((state) => {
-      // Se a configuração de salvar tokens foi alterada para falso
       if (!save && state.tokens) {
+        // Se a configuração de salvar tokens for desativada e tokens existem, remova os tokens do SecureStore
         deleteSecureData('tokens');
       }
+      // Atualize o estado com a nova configuração de salvar tokens
       return { saveTokens: save };
     });
   },

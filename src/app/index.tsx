@@ -9,7 +9,7 @@ import { colors } from "@/styles/colors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Link, router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import {
   KeyboardAvoidingView,
@@ -31,8 +31,7 @@ type FormData = z.infer<typeof schema>;
 export default function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const { setUser, setTokens, setSaveTokens, loadStore, tokens } =
-    useUserStore();
+  const { setUser, setTokens, setSaveTokens } = useUserStore();
 
   const { control, handleSubmit } = useForm<FormData>({
     defaultValues: {
@@ -41,16 +40,6 @@ export default function Login() {
     },
     resolver: zodResolver(schema),
   });
-
-  useEffect(() => {
-    const initializeApp = async () => {
-      await loadStore();
-      if (tokens?.accessToken && tokens?.refreshToken) {
-        router.replace("/HomeScreen");
-      }
-    };
-    initializeApp();
-  }, []);
 
   const mutation = useMutation({
     mutationFn: async ({
@@ -98,7 +87,6 @@ export default function Login() {
       }
 
       showToast("success", "Login efetuado com sucesso", "Seja bem-vindo!");
-
       router.replace("/HomeScreen");
     },
     onError: (error) => {

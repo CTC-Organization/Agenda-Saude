@@ -10,7 +10,14 @@ import { useMutation } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Pressable, Text, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import * as z from "zod";
 
 const schema = z
@@ -154,92 +161,102 @@ export default function Profile() {
   };
 
   return (
-    <View className="flex-1 bg-white dark:bg-gray-800 items-center">
-      <View className="w-11/12 gap-5 justify-center mt-8">
-        <Input>
-          <Input.Field control={control} name="name" placeholder="Nome" />
-        </Input>
-        <Input>
-          <DateInput
-            name="birthDate"
-            placeholder="Data de Nascimento"
-            editable={true}
-            control={control}
-          />
-        </Input>
-        <Input>
-          <Input.Field
-            control={control}
-            name="cpf"
-            placeholder="CPF"
-            keyboardType="numeric"
-          />
-        </Input>
-        <Input>
-          <Input.Field
-            control={control}
-            name="susNumber"
-            placeholder="N° do SUS"
-            keyboardType="numeric"
-          />
-        </Input>
-        <Input>
-          <Input.Field
-            control={control}
-            name="phoneNumber"
-            placeholder="Telefone"
-            keyboardType="number-pad"
-          />
-        </Input>
-        <Input>
-          <Input.Field
-            control={control}
-            name="email"
-            placeholder="E-mail"
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-        </Input>
-        <Input>
-          <Input.Field
-            control={control}
-            name="password"
-            placeholder="Digite sua senha"
-            secureTextEntry={!passwordVisible}
-          />
-          <Pressable onPress={togglePasswordVisibility}>
-            <Text className="font-regular text-base font-normal text-LinkText">
-              {passwordVisible ? "Esconder" : "Mostrar"}
-            </Text>
-          </Pressable>
-        </Input>
-        <Input>
-          <Input.Field
-            control={control}
-            name="confirmPassword"
-            placeholder="Confirme sua senha"
-            secureTextEntry={!passwordVisible}
-          />
-          <Pressable onPress={togglePasswordVisibility}>
-            <Text className="font-regular text-base font-normal text-LinkText">
-              {passwordVisible ? "Esconder" : "Mostrar"}
-            </Text>
-          </Pressable>
-        </Input>
-      </View>
-      <View className="flex-1 items-center justify-center">
-        <View className="w-96 justify-center">
-          <Button
-            title={"Confirmar"}
-            onPress={handleSubmit(onSubmit)}
-            isLoading={mutation.isPending}
-            backgroundColor={colors.ButtonBackground}
-            color={colors.ButtonText}
-            size={"h-16 w-full"}
-            border="rounded-2xl"
-          />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      className="flex-1"
+    >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View className="flex-1 bg-white dark:bg-gray-800 items-center">
+          <View className="w-11/12 gap-5 justify-center mt-8">
+            <Input>
+              <Input.Field control={control} name="name" placeholder="Nome" />
+            </Input>
+            <Input>
+              <DateInput
+                name="birthDate"
+                placeholder="Data de Nascimento"
+                editable={true}
+                control={control}
+              />
+            </Input>
+            <Input>
+              <Input.Field
+                control={control}
+                name="cpf"
+                placeholder="CPF"
+                keyboardType="numeric"
+              />
+            </Input>
+            <Input>
+              <Input.Field
+                control={control}
+                name="susNumber"
+                placeholder="N° do SUS"
+                keyboardType="numeric"
+              />
+            </Input>
+            <Input>
+              <Input.Field
+                control={control}
+                name="phoneNumber"
+                placeholder="Telefone"
+                keyboardType="number-pad"
+              />
+            </Input>
+            <Input>
+              <Input.Field
+                control={control}
+                name="email"
+                placeholder="E-mail"
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            </Input>
+            <Input>
+              <Input.Field
+                control={control}
+                name="password"
+                placeholder="Digite sua senha"
+                secureTextEntry={!passwordVisible}
+              />
+              <Pressable onPress={togglePasswordVisibility}>
+                <Text className="font-regular text-base font-normal text-LinkText">
+                  {passwordVisible ? "Esconder" : "Mostrar"}
+                </Text>
+              </Pressable>
+            </Input>
+            <Input>
+              <Input.Field
+                control={control}
+                name="confirmPassword"
+                placeholder="Confirme sua senha"
+                secureTextEntry={!passwordVisible}
+              />
+              <Pressable onPress={togglePasswordVisibility}>
+                <Text className="font-regular text-base font-normal text-LinkText">
+                  {passwordVisible ? "Esconder" : "Mostrar"}
+                </Text>
+              </Pressable>
+            </Input>
+          </View>
+          <View className="flex-1 items-center justify-center mt-4">
+            <View className="w-96 justify-center">
+              <Button
+                title={"Confirmar"}
+                onPress={handleSubmit(onSubmit)}
+                isLoading={mutation.isPending}
+                backgroundColor={colors.ButtonBackground}
+                color={colors.ButtonText}
+                size={"h-16 w-full"}
+                border="rounded-2xl"
+              />
+            </View>
+          </View>
         </View>
-      </View>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }

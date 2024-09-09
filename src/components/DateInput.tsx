@@ -24,10 +24,10 @@ function DateInput({ name, control, editable, placeholder }: DateInputProps) {
           <Pressable onPress={() => setShow(true)} disabled={!editable}>
             <View className="flex-row items-center justify-between">
               <Text
-                className={clsx(
-                  "font-regular text-base font-normal",
-                  value ? "text-black" : "text-TextSecondary"
-                )}
+                className={clsx("font-regular text-base font-normal", {
+                  "text-black": value,
+                  "text-TextSecondary": !value,
+                })}
               >
                 {value
                   ? new Date(value).toLocaleDateString("pt-BR")

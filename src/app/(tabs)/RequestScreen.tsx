@@ -108,10 +108,7 @@ export default function RequestScreen() {
         "Requisição efetuada com sucesso",
         "Adicionada a sua lista"
       );
-
-      setTimeout(() => {
-        router.replace("/HomeScreen");
-      }, 1000);
+      router.replace("/HomeScreen");
     },
     onError: (error) => {
       if (error instanceof Error) {

@@ -4,9 +4,7 @@ import { Text, View } from "react-native";
 
 export default function ForgotPasswordScreen() {
   const handleSuccess = () => {
-    setTimeout(() => {
-      router.navigate({ pathname: "/" });
-    }, 2000);
+    router.navigate({ pathname: "/" });
   };
 
   return (

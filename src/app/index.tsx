@@ -61,8 +61,16 @@ export default function Login() {
       return { id, userId, ...patientData };
     },
     onSuccess: async (data) => {
-      const { id, userId, email, name, phoneNumber, susNumber, birthDate } =
-        data;
+      const {
+        id,
+        userId,
+        email,
+        name,
+        phoneNumber,
+        susNumber,
+        birthDate,
+        avatar,
+      } = data;
 
       setUser({
         userId,
@@ -74,11 +82,14 @@ export default function Login() {
         email,
       });
 
+      if (avatar) {
+        const uploads = await fetchWithAuth(`uploads/${avatar}`);
+        setUser({ avatarUrl: uploads.url });
+      }
+
       showToast("success", "Login efetuado com sucesso", "Seja bem-vindo!");
 
-      setTimeout(() => {
-        router.replace("/HomeScreen");
-      }, 1000);
+      router.replace("/HomeScreen");
     },
     onError: (error) => {
       if (error instanceof Error) {

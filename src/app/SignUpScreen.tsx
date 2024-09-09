@@ -119,9 +119,7 @@ export default function Profile() {
       setTokens({ accessToken, refreshToken });
 
       showToast("success", "Cadastro efetuado com sucesso", "Seja bem-vindo!");
-      setTimeout(() => {
-        router.replace("/HomeScreen");
-      }, 1000);
+      router.replace("/HomeScreen");
     },
     onError: (error) => {
       if (error instanceof Error) {

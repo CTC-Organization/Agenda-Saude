@@ -19,6 +19,7 @@ interface UserState {
     susNumber?: string;
     phoneNumber?: string;
     email?: string;
+    avatarUrl?: string;
   } | null;
   tokens: {
     accessToken?: string;

@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { Stack } from "expo-router/stack";
 import { useColorScheme } from "nativewind";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ImageBackground, useWindowDimensions, View } from "react-native";
 import Toast from "react-native-toast-message";
 
@@ -15,23 +15,37 @@ const queryCLient = new QueryClient();
 export default function Layout() {
   const { width } = useWindowDimensions();
   const [fontsLoaded] = useFonts({ Inter_400Regular });
-  const { colorScheme } = useColorScheme();
-  const { loadStore, tokens } = useUserStore();
+  const { colorScheme, setColorScheme } = useColorScheme();
+  const [isLoading, setIsLoading] = useState(true);
+  const { loadStore, tokens, theme } = useUserStore();
 
   const titleColor = colorScheme === "dark" ? "#FFFFFF" : "#000000";
   const headerBackgroundColor = colorScheme === "dark" ? "#1F2937" : "#FFFFFF";
 
   useEffect(() => {
-    const initializeApp = async () => {
+    const initializeSession = async () => {
       await loadStore();
+      setIsLoading(false);
+    };
+    if (fontsLoaded) {
+      initializeSession();
+    }
+  }, [fontsLoaded]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      if (theme) {
+        setColorScheme(theme);
+      }
       if (tokens?.accessToken && tokens?.refreshToken) {
         router.replace("/HomeScreen");
+      } else {
+        router.replace("/LoginScreen");
       }
-    };
-    initializeApp();
-  }, []);
+    }
+  }, [isLoading]);
 
-  if (!fontsLoaded) {
+  if (isLoading || !fontsLoaded) {
     return (
       <>
         <ImageBackground
@@ -54,7 +68,7 @@ export default function Layout() {
       <QueryClientProvider client={queryCLient}>
         <Stack>
           <Stack.Screen
-            name="index"
+            name="LoginScreen"
             options={{
               title: "Agenda Saúde",
               headerStyle: { backgroundColor: headerBackgroundColor },

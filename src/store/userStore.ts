@@ -25,30 +25,33 @@ interface UserState {
     accessToken?: string;
     refreshToken?: string;
   } | null;
-  saveTokens: boolean;
-  theme: 'light' | 'dark';
+  saveSession: boolean;
+  theme: 'light' | 'dark' | 'system';
   setUser: (user: Partial<UserState['user']>) => void;
   setTokens: (tokens: Partial<UserState['tokens']>) => void;
-  setSaveTokens: (save: boolean) => void;
-  setTheme: (theme: 'light' | 'dark') => void;
+  setSaveSession: (save: boolean) => void;
+  setTheme: (theme: 'light' | 'dark' | 'system') => void;
   loadStore: () => Promise<void>;
   clearStore: () => Promise<void>;
 }
 
-const validateTheme = (theme: any): 'light' | 'dark' => {
-  return theme === 'dark' ? 'dark' : 'light';
+const validateTheme = (theme: any): 'light' | 'dark' | 'system' => {
+  return ['dark', 'light', 'system'].includes(theme) ? theme : 'system';
 };
 
 const useUserStore = create<UserState>((set) => ({
   user: null,
   tokens: null,
-  saveTokens: false,
+  saveSession: false,
   theme: 'light',
   setUser: async (user) => {
-    // Atualizar o estado e salvar os dados no SecureStore
     set((state) => {
       const updatedUser = { ...state.user, ...user };
-      saveSecureData('user', JSON.stringify(updatedUser));
+
+      if (state.saveSession) {
+        // Se saveSession é true, salve ou atualize o usuário no SecureStore
+        saveSecureData('user', JSON.stringify(updatedUser));
+      }
       return { user: updatedUser };
     });
   },
@@ -57,8 +60,8 @@ const useUserStore = create<UserState>((set) => ({
     set((state) => {
       const newTokens = { ...state.tokens, ...tokens };
 
-      if (state.saveTokens) {
-        // Se saveTokens é true, salve ou atualize os tokens no SecureStore
+      if (state.saveSession) {
+        // Se saveSession é true, salve ou atualize os tokens no SecureStore
         if (newTokens.accessToken) {
           saveSecureData('tokens', JSON.stringify({
             accessToken: newTokens.accessToken,
@@ -70,7 +73,7 @@ const useUserStore = create<UserState>((set) => ({
           return { tokens: null };
         }
       } else {
-        // Se saveTokens é false, salve ou atualize os tokens apenas no estado
+        // Se setSaveSession é false, salve ou atualize os tokens apenas no estado
         if (newTokens.accessToken) {
           // Armazena temporariamente no estado
           set({ tokens: {
@@ -86,20 +89,25 @@ const useUserStore = create<UserState>((set) => ({
       return { tokens: newTokens };
     });
   },  
-  setSaveTokens: async (save) => {
+  setSaveSession: async (save) => {
     set((state) => {
       if (!save && state.tokens) {
         // Se a configuração de salvar tokens for desativada e tokens existem, remova os tokens do SecureStore
         deleteSecureData('tokens');
       }
       // Atualize o estado com a nova configuração de salvar tokens
-      return { saveTokens: save };
+      return { saveSession: save };
     });
   },
   setTheme: async (theme) => {
-    // Atualizar o estado e salvar o tema no AsyncStorage
-    set({ theme });
-    await saveAsyncData('theme', theme);
+    set((state) => {
+      if (state.saveSession) {
+        // Salvar o tema no AsyncStorage se saveSession for true
+        saveAsyncData('theme', theme);
+      }
+      // Sempre atualiza o estado local com o tema, independentemente do saveSession
+      return { theme };
+    });
   },
   loadStore: async () => {
     // Carregar dados do AsyncStorage e SecureStore e definir o estado
@@ -109,7 +117,7 @@ const useUserStore = create<UserState>((set) => ({
     set({
       user: userData ? JSON.parse(userData) : null,
       tokens: tokenData ? JSON.parse(tokenData) : null,
-      theme: validateTheme(themeData),
+      theme: themeData ? validateTheme(themeData) : 'system',
     });
   },
   clearStore: async () => {

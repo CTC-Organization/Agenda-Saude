@@ -16,12 +16,14 @@ export function ToggleTheme() {
 
   const position = useSharedValue(isDarkTheme ? 0 : 1);
 
+  const setTheme = useUserStore((state) => state.setTheme);
+
   const togglePosition = () => {
     position.value = withSpring(isDarkTheme ? 1 : 0, { damping: 2 });
     toggleColorScheme();
 
     const newTheme = isDarkTheme ? "light" : "dark";
-    useUserStore.getState().setTheme(newTheme);
+    setTheme(newTheme);
   };
 
   const animatedCircleStyle = useAnimatedStyle(() => {

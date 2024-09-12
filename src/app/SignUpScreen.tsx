@@ -56,7 +56,7 @@ type FormData = z.infer<typeof schema>;
 
 export default function Profile() {
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const { setUser, setTokens, setSaveTokens, loadStore } = useUserStore();
+  const { setUser, setTokens, setSaveSession, loadStore } = useUserStore();
 
   const { control, handleSubmit } = useForm<FormData>({
     defaultValues: {
@@ -122,7 +122,7 @@ export default function Profile() {
         phoneNumber,
         email,
       });
-      setSaveTokens(true);
+      setSaveSession(true);
       setTokens({ accessToken, refreshToken });
 
       showToast("success", "Cadastro efetuado com sucesso", "Seja bem-vindo!");

@@ -31,7 +31,7 @@ type FormData = z.infer<typeof schema>;
 export default function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const { setUser, setTokens, setSaveTokens } = useUserStore();
+  const { setUser, setTokens, setSaveSession } = useUserStore();
 
   const { control, handleSubmit } = useForm<FormData>({
     defaultValues: {
@@ -52,7 +52,7 @@ export default function Login() {
       const loginData = await login(email, password);
       const { accessToken, refreshToken, id, userId } = loginData;
 
-      setSaveTokens(isChecked);
+      setSaveSession(isChecked);
       setTokens({ accessToken, refreshToken });
 
       const patientData = await fetchWithAuth(`patients/${id}`);

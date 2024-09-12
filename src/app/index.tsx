@@ -20,6 +20,7 @@ import {
   View,
 } from "react-native";
 import * as z from "zod";
+import { mobileDeviceCheckIn } from "./api/notification";
 
 const schema = z.object({
   email: z.string().email("E-mail inválido").min(1, "E-mail é obrigatório"),
@@ -55,6 +56,8 @@ export default function Login() {
       setSaveTokens(isChecked);
       setTokens({ accessToken, refreshToken });
 
+      await mobileDeviceCheckIn(id); // checkin de dispositivo no back
+
       const patientData = await fetchWithAuth(`patients/${id}`);
 
       return { id, userId, ...patientData };
@@ -85,6 +88,8 @@ export default function Login() {
         const uploads = await fetchWithAuth(`uploads/${avatar}`);
         setUser({ avatarUrl: uploads.url });
       }
+
+      await mobileDeviceCheckIn(id); // checkin do celular
 
       showToast("success", "Login efetuado com sucesso", "Seja bem-vindo!");
       router.replace("/HomeScreen");

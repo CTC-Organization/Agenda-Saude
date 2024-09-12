@@ -12,6 +12,7 @@
       "resizeMode": "cover"
     },
     "ios": {
+      "buildNumber": "1.0.0",
       "supportsTablet": true,
       "bundleIdentifier": "com.lukajlp.AgendaSaude",
       "infoPlist": {
@@ -19,7 +20,11 @@
         "NSPhotoLibraryUsageDescription": "Este aplicativo precisa acessar sua galeria de fotos para selecionar imagens."
       }
     },
+    "notification": {
+      "icon": "./assets/images/icon.png"
+    },
     "android": {
+      "buildNumber": "1.0.0",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#58B678"

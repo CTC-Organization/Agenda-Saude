@@ -19,6 +19,7 @@ import {
   View,
 } from "react-native";
 import * as z from "zod";
+import { mobileDeviceCheckIn } from "./api/notification";
 
 const schema = z
   .object({
@@ -124,6 +125,8 @@ export default function Profile() {
       });
       setSaveTokens(true);
       setTokens({ accessToken, refreshToken });
+
+      await mobileDeviceCheckIn(data.id); // checkin de dispositivo no back
 
       showToast("success", "Cadastro efetuado com sucesso", "Seja bem-vindo!");
       router.replace("/HomeScreen");

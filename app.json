@@ -17,7 +17,9 @@
       "bundleIdentifier": "com.lukajlp.AgendaSaude",
       "infoPlist": {
         "NSCameraUsageDescription": "Este aplicativo precisa acessar sua câmera para tirar fotos.",
-        "NSPhotoLibraryUsageDescription": "Este aplicativo precisa acessar sua galeria de fotos para selecionar imagens."
+        "NSPhotoLibraryUsageDescription": "Este aplicativo precisa acessar sua galeria de fotos para selecionar imagens.",
+        "NSUserTrackingUsageDescription": "Precisamos da identificação do seu dispositivo para entregar notificações personalizadas.",
+        "NSPushNotificationsUsageDescription": "Precisamos de permissão para enviar notificações a você."
       }
     },
     "notification": {
@@ -33,7 +35,8 @@
       "permissions": [
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
+        "WRITE_EXTERNAL_STORAGE",
+        "NOTIFICATIONS"
       ]
     },
     "web": {

@@ -1,27 +1,25 @@
 import { useState } from "react";
-import { Image, Pressable } from "react-native";
+import { Pressable } from "react-native";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useColorScheme } from "nativewind";
 
 export function NotificationButton() {
   const [isNotificationOn, setIsNotificationOn] = useState(true);
+  const { colorScheme } = useColorScheme();
+  const isDarkTheme = colorScheme === "dark";
+  const iconColor = isDarkTheme ? "white" : "black";
 
   const toggleNotification = () => {
     setIsNotificationOn(!isNotificationOn);
   };
 
   return (
-    <Pressable
-      className="w-full h-2/5 justify-center items-center"
-      onPress={toggleNotification}
-    >
-      <Image
-        source={
-          isNotificationOn
-            ? require("@/assets/sino-ativado.png")
-            : require("@/assets/sino-desativado.png")
-        }
-        className="size-full"
-        resizeMode="contain"
-      />
+    <Pressable onPress={toggleNotification}>
+      {isNotificationOn ? (
+        <MaterialCommunityIcons name="bell-ring" size={24} color={iconColor} />
+      ) : (
+        <MaterialCommunityIcons name="bell-cancel" size={24} color={iconColor} />
+      )}
     </Pressable>
   );
 }

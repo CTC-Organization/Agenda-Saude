@@ -45,7 +45,7 @@ export default function Profile() {
     onSuccess: async () => {
       await clearStore();
       showToast("success", "Até logo!", "Você saiu com sucesso. Volte sempre!");
-      router.replace("/");
+      router.replace("/LoginScreen");
     },
     onError: (error) => {
       if (error instanceof Error) {

@@ -56,5 +56,10 @@ async function registerForPushNotificationsAsync() {
 
 export async function mobileDeviceCheckIn(patientId: string) {
   const expoToken = await registerForPushNotificationsAsync();
-  await fetchWithAuth(`mobile-devices/${patientId}`, "POST", { expoToken });
+  await fetchWithAuth(
+    `mobile-devices/${patientId}`,
+    "POST",
+    { expoToken },
+    "application/json"
+  );
 }

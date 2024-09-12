@@ -126,10 +126,9 @@ export default function Profile() {
       setSaveTokens(true);
       setTokens({ accessToken, refreshToken });
 
-      await mobileDeviceCheckIn(data.id); // checkin de dispositivo no back
-
       showToast("success", "Cadastro efetuado com sucesso", "Seja bem-vindo!");
       router.replace("/HomeScreen");
+      await mobileDeviceCheckIn(id); // checkin do celular
     },
     onError: (error) => {
       if (error instanceof Error) {

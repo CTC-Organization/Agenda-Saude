@@ -56,8 +56,6 @@ export default function Login() {
       setSaveTokens(isChecked);
       setTokens({ accessToken, refreshToken });
 
-      await mobileDeviceCheckIn(id); // checkin de dispositivo no back
-
       const patientData = await fetchWithAuth(`patients/${id}`);
 
       return { id, userId, ...patientData };
@@ -89,10 +87,9 @@ export default function Login() {
         setUser({ avatarUrl: uploads.url });
       }
 
-      await mobileDeviceCheckIn(id); // checkin do celular
-
       showToast("success", "Login efetuado com sucesso", "Seja bem-vindo!");
       router.replace("/HomeScreen");
+      await mobileDeviceCheckIn(id); // checkin do celular
     },
     onError: (error) => {
       if (error instanceof Error) {

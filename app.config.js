@@ -5,8 +5,7 @@ export default {
   expo: {
     extra: {
       eas: {
-        slug: "agenda-saude-notificacao",
-        projectId: "8f6fe5a9-362c-40b9-a370-a623c36156d8",
+        projectId: "6ce483c5-3632-470d-8ff5-26e0e1300f9c",
       },
     },
   },

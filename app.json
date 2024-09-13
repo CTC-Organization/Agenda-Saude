@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Agenda Saúde",
-    "slug": "agenda-saude-notificacao",
+    "slug": "Agenda-Saude",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -61,10 +61,10 @@
     "extra": {
       "router": {
         "origin": false
-      },
-      "eas": {
-        "projectId": "8f6fe5a9-362c-40b9-a370-a623c36156d8"
       }
+    },
+    "eas": {
+      "projectId": "6ce483c5-3632-470d-8ff5-26e0e1300f9c"
     }
   }
 }

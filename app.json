@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Agenda Saúde",
-    "slug": "Agenda-Saude",
+    "slug": "agenda-saude-notificacao",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -26,7 +26,6 @@
       "icon": "./assets/images/icon.png"
     },
     "android": {
-      "googleServicesFile": "./google-services.json",
       "buildNumber": "1.0.0",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
@@ -64,7 +63,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "e7f01e73-d353-48b3-ab32-9b57a08ddbb6"
+        "projectId": "8f6fe5a9-362c-40b9-a370-a623c36156d8"
       }
     }
   }

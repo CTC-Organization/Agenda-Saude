@@ -26,6 +26,7 @@
       "icon": "./assets/images/icon.png"
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "buildNumber": "1.0.0",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",

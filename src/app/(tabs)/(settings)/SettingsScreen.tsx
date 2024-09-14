@@ -24,7 +24,7 @@ const UserImage = ({ avatarUrl }: { avatarUrl?: string }) => {
     border-white bg-white dark:border-gray-800  dark:bg-gray-700 
     overflow-hidden relative -top-[61px] items-center justify-center"
     >
-      {loading && <Loading />}
+      {avatarUrl && loading && <Loading />}
       {avatarUrl ? (
         <Image
           source={{ uri: avatarUrl }}

@@ -141,7 +141,9 @@ const AccordionItem = ({
             </View>
           ) : (
             <View className="flex-row items-center">
-              <FontAwesome6 name="user-doctor" size={36} color="black" />
+              <View className="ml-3">
+                <FontAwesome6 name="user-doctor" size={36} color="black" />
+              </View>
               <View className="ml-3">
                 <Text className="font-regular font-normal text-black text-[13px]">
                   {specialty}

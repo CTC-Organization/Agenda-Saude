@@ -15,7 +15,6 @@ import { ScrollView, Text, View } from "react-native";
 export default function AppointmentsScreen() {
   const { user } = useUserStore();
   const username = user?.name || "Usuário";
-
   const {
     data: appointments = [],
     isPending,
@@ -52,7 +51,7 @@ export default function AppointmentsScreen() {
         <Text className="font-regular text-xl font-medium text-black dark:text-white">
           Minhas Consultas:
         </Text>
-        {appointments.length === 0 ? (
+        {!Array.isArray(appointments) || appointments?.length === 0 ? (
           <View className="flex-1 justify-center items-center gap-10 my-10">
             <Text className="font-regular text-lg text-black dark:text-white">
               Nenhuma consulta encontrada.
@@ -75,7 +74,6 @@ export default function AppointmentsScreen() {
               const formattedDate = item.date
                 ? format(new Date(item.date), "dd/MM/yyyy")
                 : "";
-
               return (
                 <AccordionItem
                   key={item.id}

@@ -1,8 +1,11 @@
+import { useUserStore } from "@/store/userStore";
+
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 export async function refreshToken(refreshToken: string) {
+  const { user } = useUserStore();
   try {
-    const response = await fetch(`${API_URL}auth/refresh-token`, {
+    const response = await fetch(`${API_URL}auth/refresh-token/${user?.userId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

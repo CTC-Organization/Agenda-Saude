@@ -6,8 +6,8 @@ import { AppointmentProps } from "@/types/AppointmentTypes";
 import { AntDesign } from "@expo/vector-icons";
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import { useMutation } from "@tanstack/react-query";
-import { router } from "expo-router";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { Card } from "./Card";
@@ -26,6 +26,8 @@ const AccordionItem = ({
 }: AppointmentProps) => {
   const [expanded, setExpanded] = useState(false);
   const { user } = useUserStore();
+  const queryClient = useQueryClient();
+  const router = useRouter();
 
   const navigateToDetails = () => {
     router.push({
@@ -45,46 +47,43 @@ const AccordionItem = ({
   };
 
   const navigateToRequest = () => {
-    router.push({
-      pathname: "/RequestScreen",
-      params: {
-        requestId: id,
-        specialty,
-        files: attachments,
-      },
-    });
+    router.push(
+      `/RequestScreen?requestId=${id}&requestSpeciality=${specialty}`
+    );
   };
 
   const mutation = useMutation({
     mutationFn: async ({
       endpoint,
-      patientId,
+      id,
     }: {
-      endpoint: string;
-      patientId: string;
+      endpoint: "confirm" | "cancel";
+      id: string;
     }) => {
+      const body = { patientId: user?.id };
       const patchData = await fetchWithAuth(
-        `requests/${endpoint}/${patientId}`,
+        `requests/${endpoint}/${id}`,
         "PATCH",
-        patientId
+        body
       );
-
       return { patchData, endpoint };
     },
     onSuccess: async ({ endpoint }) => {
-      if (endpoint === "confirm") {
-        showToast(
-          "success",
-          "Consulta confirmada",
-          "Consulta confirmada com sucesso!"
-        );
-      } else {
-        showToast(
-          "success",
-          "Consulta cancelada",
-          "Consulta cancelada com sucesso!"
-        );
-      }
+      const successMessage =
+        endpoint === "confirm"
+          ? {
+              title: "Consulta confirmada",
+              message: "Consulta confirmada com sucesso!",
+            }
+          : {
+              title: "Consulta cancelada",
+              message: "Consulta cancelada com sucesso!",
+            };
+      showToast("success", successMessage.title, successMessage.message);
+      // Invalida a consulta para garantir que a lista de consultas seja atualizada
+      await queryClient.invalidateQueries({
+        queryKey: ["appointments", user?.id],
+      });
     },
     onError: (error) => {
       if (error instanceof Error) {
@@ -93,21 +92,15 @@ const AccordionItem = ({
     },
   });
 
-  const handleRequest = async (endpoint: string) => {
-    if (!user?.id) {
-      throw new Error("Usuário não autenticado ou ID não disponível.");
-    }
-    await mutation.mutateAsync({
-      endpoint,
-      patientId: user.id,
-    });
+  const handleRequest = async (endpoint: "confirm" | "cancel") => {
+    await mutation.mutateAsync({ endpoint, id });
   };
 
   return (
-    <View className="w-[305px] my-3 ms-1">
+    <View className="w-full my-3">
       {/* Corpo do Accordion */}
       <Pressable
-        className={`h-[47px] rounded-t-[16px] flex-row justify-between items-center ${
+        className={`w-full h-[47px] rounded-t-[16px] flex-row justify-between items-center ${
           expanded ? "bg-ButtonBackground" : "bg-white"
         }`}
         style={{
@@ -117,7 +110,7 @@ const AccordionItem = ({
         }}
         onPress={() => setExpanded(!expanded)}
       >
-        <View className="flex-row items-center ms-3">
+        <View className="flex-row items-center">
           {expanded ? (
             <View className="ml-3">
               <Text className="font-regular font-normal text-white text-[13px]">
@@ -128,6 +121,20 @@ const AccordionItem = ({
                   <FontAwesome6 name="clock" size={14} color="white" />
                   <Text className="font-regular font-normal text-white text-[10.5px] ml-1">
                     {date}
+                  </Text>
+                </View>
+              )}
+              {status === "PENDING" && (
+                <View className="flex-row items-center">
+                  <Text className="font-regular font-normal text-white text-[10.5px]">
+                    Aguardando confirmação do sistema
+                  </Text>
+                </View>
+              )}
+              {status === "DENIED" && (
+                <View className="flex-row items-center">
+                  <Text className="font-regular font-normal text-white text-[10.5px]">
+                    Requisição negada, clique em editar para refazer
                   </Text>
                 </View>
               )}
@@ -158,7 +165,7 @@ const AccordionItem = ({
       {/* Conteúdo Expandido */}
       {expanded && (
         <View
-          className="w-[305px] h-[121.275px] bg-white rounded-b-[16px] p-4 mt-0"
+          className="w-full h-[121.275px] bg-white rounded-b-[16px] p-4 mt-0"
           style={{ elevation: 4 }}
         >
           <View className="flex-row justify-between mt-1">
@@ -190,6 +197,7 @@ const AccordionItem = ({
                     title="Aceitar"
                     onPress={() => handleRequest("confirm")}
                     isLoading={mutation.isPending}
+                    disabled={mutation.isPending}
                     backgroundColor={colors.ButtonBackground}
                     color={colors.ButtonText}
                     size={"h-10 w-40"}
@@ -201,6 +209,7 @@ const AccordionItem = ({
                     title="Rejeitar"
                     onPress={() => handleRequest("cancel")}
                     isLoading={mutation.isPending}
+                    disabled={mutation.isPending}
                     backgroundColor={colors.SecondaryButtonBackground}
                     color={colors.TextSecondary}
                     size={"h-10 w-24"}
@@ -211,54 +220,43 @@ const AccordionItem = ({
             )}
 
             {status === "DENIED" && (
-              <View className="flex-1 items-center justify-center gap-5 px-10">
-                <View className="w-full items-center justify-start">
-                  <Button
-                    title="Editar"
-                    onPress={navigateToRequest}
-                    isLoading={mutation.isPending}
-                    backgroundColor={colors.ButtonBackground}
-                    color={colors.ButtonText}
-                    size={"h-[45%] w-9/12"}
-                    border={"rounded-2xl border border-SecondaryButtonBorder"}
-                  />
-                </View>
+              <View className="w-full items-center justify-center">
+                <Button
+                  title="Editar"
+                  onPress={navigateToRequest}
+                  backgroundColor={colors.ButtonBackground}
+                  color={colors.ButtonText}
+                  size={"h-10 w-40"}
+                  border={"rounded-2xl border border-ButtonBorder"}
+                />
               </View>
             )}
 
             {status === "PENDING" && (
               <View className="w-full items-center justify-center">
-                <Card size="h-[30%] w-9/12">
-                  <View className="flex-row justify-center items-center gap-5 mt-2">
-                    <AntDesign
-                      name="clockcircleo"
-                      size={24}
-                      className="opacity-50"
-                      color={colors.TextPrimary}
-                    />
-                    <Text className="text-base font-normal opacity-50 text-TextPrimary">
-                      Aguardando
-                    </Text>
-                  </View>
-                </Card>
+                <Card
+                  title="Aguardando"
+                  size="w-5/6 h-1/6"
+                  iconLibrary={AntDesign}
+                  iconName="clockcircleo"
+                  iconSize={24}
+                  iconColor={colors.TextPrimary}
+                  flexDirection="row"
+                />
               </View>
             )}
 
             {status === "CONFIRMED" && (
               <View className="w-full items-center justify-center">
-                <Card size="h-[30%] w-9/12">
-                  <View className="flex-row justify-center items-center gap-5 mt-2">
-                    <AntDesign
-                      name="checkcircleo"
-                      size={24}
-                      className="opacity-50"
-                      color={colors.TextPrimary}
-                    />
-                    <Text className="text-base font-normal opacity-50 text-TextPrimary">
-                      Confirmado
-                    </Text>
-                  </View>
-                </Card>
+                <Card
+                  title="Confirmado"
+                  size="w-5/6 h-1/6"
+                  iconLibrary={AntDesign}
+                  iconName="checkcircleo"
+                  iconSize={24}
+                  iconColor={colors.TextPrimary}
+                  flexDirection="row"
+                />
               </View>
             )}
           </View>

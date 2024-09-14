@@ -177,10 +177,9 @@ export default function EditAccountScreen() {
     name: string,
     type: string
   ): CustomFile => {
-    const cleanName = name.split(".").slice(0, -1).join(".") || name;
     return {
       uri: Platform.OS === "android" ? uri : uri.replace("file://", ""),
-      name: cleanName,
+      name,
       type,
     };
   };

@@ -50,6 +50,7 @@ export default function TabLayout() {
             fontFamily: "Inter_400Regular",
             fontWeight: "bold",
           },
+          href: "/RequestScreen",
           tabBarIcon: ({ color }) => (
             <Image
               source={require("@/assets/requisicao.png")}

@@ -7,21 +7,14 @@ import { UploadModal } from "@/components/UploadModal";
 import { useUserStore } from "@/store/userStore";
 import { colors } from "@/styles/colors";
 import { CustomFile } from "@/types/AppointmentTypes";
-import { FontAwesome6 } from "@expo/vector-icons";
+import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { useMutation } from "@tanstack/react-query";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useState } from "react";
-import {
-  Image,
-  Platform,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
+import { Platform, ScrollView, Text, View } from "react-native";
 
 const data = [
   { id: "clinico", note: "Clínico Geral" },
@@ -33,31 +26,26 @@ const data = [
 ];
 
 export default function RequestScreen() {
-  const {
-    requestId: initialRequestId,
-    speciality: initialSpeciality,
-    files: initialFiles,
-  } = useLocalSearchParams();
+  const { requestId, requestSpeciality } = useLocalSearchParams<{
+    requestId?: string;
+    requestSpeciality?: string;
+  }>();
 
-  const parsedFiles = initialFiles ? JSON.parse(initialFiles as string) : [];
-  const initialSpecialityValue = Array.isArray(initialSpeciality)
-    ? initialSpeciality[0]
-    : initialSpeciality || "";
-  const initialRequestIdValue = Array.isArray(initialRequestId)
-    ? initialRequestId[0]
-    : initialRequestId || "";
-
-  const [speciality, setSpeciality] = useState(initialSpecialityValue);
-  const [files, setFiles] = useState<CustomFile[]>(parsedFiles);
+  const [speciality, setSpeciality] = useState<string>("");
+  const [files, setFiles] = useState<CustomFile[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
 
   const { user } = useUserStore();
 
   useFocusEffect(
     useCallback(() => {
-      setSpeciality("");
-      setFiles([]);
-    }, [])
+      if (!requestId) {
+        setSpeciality("");
+        setFiles([]);
+      } else if (typeof requestSpeciality === "string") {
+        setSpeciality(requestSpeciality);
+      }
+    }, [requestId, requestSpeciality])
   );
 
   const mutation = useMutation({
@@ -108,6 +96,7 @@ export default function RequestScreen() {
         "Requisição efetuada com sucesso",
         "Adicionada a sua lista"
       );
+      router.setParams({ requestId: undefined, speciality: undefined });
       router.replace("/HomeScreen");
     },
     onError: (error) => {
@@ -122,10 +111,9 @@ export default function RequestScreen() {
     name: string,
     type: string
   ): CustomFile => {
-    const cleanName = name.split(".").slice(0, -1).join(".") || name;
     return {
       uri: Platform.OS === "android" ? uri : uri.replace("file://", ""),
-      name: cleanName,
+      name,
       type,
     };
   };
@@ -198,10 +186,10 @@ export default function RequestScreen() {
   const handleRequest = async () => {
     if (speciality && user?.id) {
       await mutation.mutateAsync({
-        speciality,
+        speciality: speciality,
         patientId: user.id,
         files,
-        requestId: initialRequestIdValue || undefined,
+        requestId: requestId || undefined,
       });
     } else {
       showToast(
@@ -223,7 +211,7 @@ export default function RequestScreen() {
         >
           Selecione a especialidade:
         </Text>
-        <View className="w-full max-h-32 my-14">
+        <View className="w-full max-h-32 my-10">
           <Picker
             selectedValue={speciality}
             onValueChange={(itemValue) => setSpeciality(itemValue)}
@@ -252,30 +240,28 @@ export default function RequestScreen() {
             ))}
           </View>
         )}
-        {speciality !== "" && speciality !== "clinico" && (
-          <View className="w-full items-center justify-center">
-            <Card size="w-5/6 h-[200px]">
-              <Pressable onPress={() => setModalVisible(true)}>
-                <View className="size-full justify-center items-center">
-                  <Image
-                    source={require("@/assets/requisicao.png")}
-                    className="size-24 opacity-50"
-                    style={{ tintColor: colors.TextPrimary }}
-                  />
-                  <Text className="text-base font-normal opacity-50 text-TextPrimary">
-                    Inserir Arquivo
-                  </Text>
-                </View>
-              </Pressable>
-            </Card>
+        {speciality && speciality !== "clinico" && (
+          <View className="w-full h-[30%] items-center justify-center">
+            <Card
+              title="Inserir Arquivo"
+              size="w-5/6"
+              iconLibrary={MaterialIcons}
+              iconName="assignment"
+              iconSize={100}
+              iconColor={colors.TextPrimary}
+              flexDirection="col"
+              onPress={() => setModalVisible(true)}
+              disabled={false}
+            />
           </View>
         )}
 
-        <View className="flex-1 w-96 items-center my-14">
+        <View className="flex-1 w-96 items-center my-10">
           <Button
-            title="Confirmar"
+            title={requestId ? "Reenviar" : "Confirmar"}
             onPress={handleRequest}
             isLoading={mutation.isPending}
+            disabled={mutation.isPending}
             backgroundColor={colors.ButtonBackground}
             color={colors.ButtonText}
             size={"h-16 w-full"}

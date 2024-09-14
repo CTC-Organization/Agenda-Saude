@@ -17,23 +17,23 @@ export default function AppointmentsScreen() {
   const username = user?.name || "Usuário";
 
   const {
-    data: appointments = [],
-    isPending,
+    data: appointments,
+    isLoading,
     isError,
     error,
   } = useQuery({
     queryKey: ["appointments", user?.id],
-    queryFn: async () => {
-      const response = await fetchWithAuth(
-        `requests/patient-requests/${user?.id}`
-      );
-      return response;
-    },
+    queryFn: () => fetchWithAuth(`requests/patient-requests/${user?.id}`),
     enabled: !!user?.id,
+    refetchInterval: 5000,
   });
 
-  if (isPending) {
-    return <Loading />;
+  if (isLoading) {
+    return (
+      <View className="flex-1 size-full justify-center items-center">
+        <Loading />
+      </View>
+    );
   }
 
   if (isError) {
@@ -69,7 +69,8 @@ export default function AppointmentsScreen() {
         ) : (
           <FlashList
             data={(appointments as AppointmentProps[]).filter(
-              (item) => item.status !== "DENIED"
+              (item) =>
+                item.status !== "CANCELLED" && item.status !== "COMPLETED"
             )}
             renderItem={({ item }) => {
               const formattedDate = item.date
@@ -78,7 +79,7 @@ export default function AppointmentsScreen() {
 
               return (
                 <AccordionItem
-                  key={item.id}
+                  key={appointments.id}
                   id={item.id}
                   specialty={item.specialty}
                   date={formattedDate}

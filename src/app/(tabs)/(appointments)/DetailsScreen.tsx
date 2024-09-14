@@ -1,8 +1,5 @@
 import { fetchWithAuth } from "@/app/api/apiClient";
-import {
-  getAddressFromCoordinates,
-  getMapPreviewUrl,
-} from "@/app/api/geocodingService";
+import { getAddressFromCoordinates } from "@/app/api/geocodingService";
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { Loading } from "@/components/Loading";
@@ -11,18 +8,13 @@ import { useUserStore } from "@/store/userStore";
 import { colors } from "@/styles/colors";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
-import {
-  Image,
-  Linking,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
+import { Image, Linking, ScrollView, Text, View } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 
 export default function DetailsScreen() {
+  // Hooks
   const {
     specialty,
     doctorName,
@@ -35,7 +27,9 @@ export default function DetailsScreen() {
     observation,
   } = useLocalSearchParams();
   const { user } = useUserStore();
+  const queryClient = useQueryClient();
 
+  // Função auxiliar para converter os parâmetros em string
   const paramToString = (
     param: string | string[] | null | undefined,
     fieldName?: string
@@ -48,6 +42,7 @@ export default function DetailsScreen() {
     return Array.isArray(param) ? param[0] : String(param ?? "");
   };
 
+  // Variáveis derivadas dos parâmetros
   const specialtyString = paramToString(specialty);
   const doctorNameString = paramToString(doctorName);
   const dateString = paramToString(date);
@@ -69,61 +64,74 @@ export default function DetailsScreen() {
     });
   };
 
-  const { data, isPending, isError, error } = useQuery({
+  // Query para obter o endereço a partir das coordenadas
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["address", latitudeString, longitudeString],
     queryFn: async () => {
       const address = await getAddressFromCoordinates(
         latitudeString,
         longitudeString
       );
-      const mapPreviewUrl = getMapPreviewUrl(latitudeString, longitudeString);
-
-      return { address, mapPreviewUrl };
+      return { address };
     },
     enabled: !!latitudeString && !!longitudeString,
   });
 
-  const address = data?.address;
-  const mapPreviewUrl = data?.mapPreviewUrl;
-
-  if (isPending) {
-    return <Loading />;
-  }
-
-  if (isError) {
-    showToast("error", "Erro ao conectar com a API do Google", error.message);
-  }
-
+  // Mutação para alterar o status da requisição
   const mutation = useMutation({
     mutationFn: async ({
       endpoint,
-      patientId,
+      id,
     }: {
-      endpoint: string;
-      patientId: string;
+      endpoint: "confirm" | "cancel";
+      id: string;
     }) => {
+      const body = { patientId: user?.id };
       const patchData = await fetchWithAuth(
-        `requests/${endpoint}/${patientId}`,
+        `requests/${endpoint}/${id}`,
         "PATCH",
-        patientId
+        body
       );
-
-      return { patchData, endpoint };
+      return { patchData, endpoint, body };
     },
-    onSuccess: async ({ endpoint }) => {
-      if (endpoint === "confirm") {
-        showToast(
-          "success",
-          "Consulta confirmada",
-          "Consulta confirmada com sucesso!"
-        );
-      } else {
-        showToast(
-          "success",
-          "Consulta cancelada",
-          "Consulta cancelada com sucesso!"
-        );
-      }
+    onSuccess: async ({ endpoint, body }) => {
+      // Invalida a query geral de requisições
+      await queryClient.invalidateQueries({
+        queryKey: ["appointments", user?.id],
+      });
+
+      // Busca os detalhes da requisição atualizada
+      const updatedRequest = await fetchWithAuth(`requests/${id}`, "GET", body);
+      const requestDetails = await updatedRequest.json();
+
+      // Mostra uma mensagem de sucesso
+      const successMessage =
+        endpoint === "confirm"
+          ? {
+              title: "Consulta confirmada",
+              message: "Consulta confirmada com sucesso!",
+            }
+          : {
+              title: "Consulta cancelada",
+              message: "Consulta cancelada com sucesso!",
+            };
+      showToast("success", successMessage.title, successMessage.message);
+
+      // Navega para a tela de detalhes com os dados atualizados
+      router.replace({
+        pathname: `/DetailsScreen`,
+        params: {
+          specialty: requestDetails.specialty,
+          doctorName: requestDetails.doctorName,
+          date: requestDetails.date,
+          latitude: requestDetails.latitude,
+          longitude: requestDetails.longitude,
+          status: requestDetails.status,
+          id: requestDetails.id,
+          attachments: requestDetails.attachments,
+          observation: requestDetails.observation,
+        },
+      });
     },
     onError: (error) => {
       if (error instanceof Error) {
@@ -132,14 +140,8 @@ export default function DetailsScreen() {
     },
   });
 
-  const handleRequest = async (endpoint: string) => {
-    if (!user?.id) {
-      throw new Error("Usuário não autenticado ou ID não disponível.");
-    }
-    await mutation.mutateAsync({
-      endpoint,
-      patientId: user.id,
-    });
+  const handleRequest = async (endpoint: "confirm" | "cancel") => {
+    await mutation.mutateAsync({ endpoint, id: idString });
   };
 
   const openMaps = () => {
@@ -148,6 +150,16 @@ export default function DetailsScreen() {
       console.error("Erro ao abrir o mapa", err)
     );
   };
+
+  const address = data?.address;
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (isError) {
+    showToast("error", "Erro ao conectar com a API do Google", error.message);
+  }
 
   return (
     <ScrollView
@@ -196,16 +208,39 @@ export default function DetailsScreen() {
               </Text>
               <Text
                 className="font-regular font-normal text-xs text-TextSecondary 
-        dark:text-SecondaryButtonBorder mt-1"
+        dark:text-SecondaryButtonBorder mt-1 mb-2"
               >
-                {address}
+                {address || "Localização não disponível"}
               </Text>
-              <Pressable onPress={openMaps} className="mt-2">
-                <Image
-                  source={{ uri: mapPreviewUrl }}
-                  className="w-[331px] h-[186px] rounded-[10px] bg-lightgray"
-                />
-              </Pressable>
+              {latitudeString && longitudeString ? (
+                <MapView
+                  style={{ width: "100%", height: 200, borderRadius: 10 }}
+                  initialRegion={{
+                    latitude: parseFloat(latitudeString),
+                    longitude: parseFloat(longitudeString),
+                    latitudeDelta: 0.001,
+                    longitudeDelta: 0.001,
+                  }}
+                  scrollEnabled={true} // Desabilita o scroll do mapa
+                  zoomEnabled={true} // Desabilita o zoom do mapa
+                  rotateEnabled={false} // Desabilita a rotação do mapa
+                  pitchEnabled={false} // Desabilita o inclinação do mapa
+                  onPress={openMaps} // Adiciona a função de abrir o Google Maps ao clicar no mapa
+                >
+                  <Marker
+                    coordinate={{
+                      latitude: parseFloat(latitudeString),
+                      longitude: parseFloat(longitudeString),
+                    }}
+                    title="Localização"
+                    description={address || "Localização não disponível"}
+                  />
+                </MapView>
+              ) : (
+                <Text className="mt-2 text-gray-500">
+                  Preview do mapa não disponível
+                </Text>
+              )}
             </View>
           </>
         )}
@@ -242,16 +277,16 @@ export default function DetailsScreen() {
                 isLoading={mutation.isPending}
                 backgroundColor={colors.ButtonBackground}
                 color={colors.ButtonText}
-                size={"h-[56%] w-6/12"}
+                size={"h-[60%] w-6/12"}
                 border={"rounded-2xl border border-ButtonBorder"}
               />
               <Button
                 title="Cancelar"
-                onPress={() => console.log("Cancelar")}
+                onPress={() => handleRequest("cancel")}
                 isLoading={mutation.isPending}
                 backgroundColor={colors.SecondaryButtonBackground}
                 color={colors.TextSecondary}
-                size={"h-[56%] w-5/12"}
+                size={"h-[60%] w-5/12"}
                 border={"rounded-2xl border border-SecondaryButtonBorder"}
               />
             </View>
@@ -266,44 +301,36 @@ export default function DetailsScreen() {
                 isLoading={mutation.isPending}
                 backgroundColor={colors.ButtonBackground}
                 color={colors.ButtonText}
-                size={"h-[45%] w-9/12"}
+                size={"h-[40%] w-9/12"}
                 border={"rounded-2xl border border-SecondaryButtonBorder"}
               />
             </View>
           </View>
         )}
         {statusString === "PENDING" && (
-          <View className="w-full items-center justify-center">
-            <Card size="h-[30%] w-9/12">
-              <View className="flex-row justify-center items-center gap-5 mt-2">
-                <AntDesign
-                  name="clockcircleo"
-                  size={24}
-                  className="opacity-50"
-                  color={colors.TextPrimary}
-                />
-                <Text className="text-base font-normal opacity-50 text-TextPrimary">
-                  Aguardando
-                </Text>
-              </View>
-            </Card>
+          <View className="w-full h-[10%] items-center justify-center mt-32">
+            <Card
+              title="Aguardando"
+              size="w-5/6"
+              iconLibrary={AntDesign}
+              iconName="clockcircleo"
+              iconSize={50}
+              iconColor={colors.TextPrimary}
+              flexDirection="row"
+            />
           </View>
         )}
         {statusString === "CONFIRMED" && (
-          <View className="w-full items-center justify-center">
-            <Card size="h-[30%] w-9/12">
-              <View className="flex-row justify-center items-center gap-5 mt-2">
-                <AntDesign
-                  name="checkcircleo"
-                  size={24}
-                  className="opacity-50"
-                  color={colors.TextPrimary}
-                />
-                <Text className="text-base font-normal opacity-50 text-TextPrimary">
-                  Confirmado
-                </Text>
-              </View>
-            </Card>
+          <View className="w-full h-[10%] items-center justify-center mt-10">
+            <Card
+              title="Confirmado"
+              size="w-5/6"
+              iconLibrary={AntDesign}
+              iconName="checkcircleo"
+              iconSize={50}
+              iconColor={colors.TextPrimary}
+              flexDirection="row"
+            />
           </View>
         )}
       </View>

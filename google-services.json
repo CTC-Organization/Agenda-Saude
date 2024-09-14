@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1066376578289",
+    "project_id": "agenda-saude-storage",
+    "storage_bucket": "agenda-saude-storage.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1066376578289:android:4ecf259e1bbf9154a4d550",
+        "android_client_info": {
+          "package_name": "com.lukajlp.AgendaSaude"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3b5OgkO_osqmzKmduQf4zkxEGdaIeGJU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

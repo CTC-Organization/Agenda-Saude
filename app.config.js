@@ -2,7 +2,7 @@ export default {
   expo: {
     android: {
       package: "com.lukajlp.AgendaSaude",
-      googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
+      googleServicesFile: "./google-services.json",
       buildNumber: "1.0.0",
       adaptiveIcon: {
         foregroundImage: "./assets/images/adaptive-icon.png",

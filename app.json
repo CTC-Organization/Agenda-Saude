@@ -12,24 +12,18 @@
       "resizeMode": "cover"
     },
     "ios": {
+      "buildNumber": "1.0.0",
       "supportsTablet": true,
       "bundleIdentifier": "com.lukajlp.AgendaSaude",
       "infoPlist": {
         "NSCameraUsageDescription": "Este aplicativo precisa acessar sua câmera para tirar fotos.",
-        "NSPhotoLibraryUsageDescription": "Este aplicativo precisa acessar sua galeria de fotos para selecionar imagens."
+        "NSPhotoLibraryUsageDescription": "Este aplicativo precisa acessar sua galeria de fotos para selecionar imagens.",
+        "NSUserTrackingUsageDescription": "Precisamos da identificação do seu dispositivo para entregar notificações personalizadas.",
+        "NSPushNotificationsUsageDescription": "Precisamos de permissão para enviar notificações a você."
       }
     },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#58B678"
-      },
-      "package": "com.lukajlp.AgendaSaude",
-      "permissions": [
-        "CAMERA",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
-      ]
+    "notification": {
+      "icon": "./assets/images/icon.png"
     },
     "web": {
       "bundler": "metro",
@@ -53,10 +47,10 @@
     "extra": {
       "router": {
         "origin": false
-      },
-      "eas": {
-        "projectId": "e7f01e73-d353-48b3-ab32-9b57a08ddbb6"
       }
+    },
+    "eas": {
+      "projectId": "6ce483c5-3632-470d-8ff5-26e0e1300f9c"
     }
   }
 }

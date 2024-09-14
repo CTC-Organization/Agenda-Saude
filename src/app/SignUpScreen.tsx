@@ -19,6 +19,7 @@ import {
   View,
 } from "react-native";
 import * as z from "zod";
+import { mobileDeviceCheckIn } from "./api/notification";
 
 const schema = z
   .object({
@@ -127,6 +128,7 @@ export default function Profile() {
 
       showToast("success", "Cadastro efetuado com sucesso", "Seja bem-vindo!");
       router.replace("/HomeScreen");
+      await mobileDeviceCheckIn(id); // checkin do celular
     },
     onError: (error) => {
       if (error instanceof Error) {

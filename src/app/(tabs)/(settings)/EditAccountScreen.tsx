@@ -15,7 +15,14 @@ import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Image, Platform, Pressable, View } from "react-native";
+import {
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  View,
+} from "react-native";
 import * as z from "zod";
 
 const schema = z.object({
@@ -242,100 +249,112 @@ export default function EditAccountScreen() {
   };
 
   return (
-    <View className="flex-1 bg-white dark:bg-gray-800 items-center">
-      <View className="mt-4">
-        <UserImage
-          imageUri={image.length > 0 ? image[0].uri : user?.avatarUrl}
-          onCameraPress={() => setModalVisible(true)}
-        />
-      </View>
-      <UploadModal
-        modalVisible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        options={[
-          {
-            children: (
-              <FontAwesome6
-                name="camera"
-                size={24}
-                color={colors.TextPrimary}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      className="flex-1"
+    >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View className="flex-1 bg-white dark:bg-gray-800 items-center">
+          <View className="mt-4">
+            <UserImage
+              imageUri={image.length > 0 ? image[0].uri : user?.avatarUrl}
+              onCameraPress={() => setModalVisible(true)}
+            />
+          </View>
+          <UploadModal
+            modalVisible={modalVisible}
+            onClose={() => setModalVisible(false)}
+            options={[
+              {
+                children: (
+                  <FontAwesome6
+                    name="camera"
+                    size={24}
+                    color={colors.TextPrimary}
+                  />
+                ),
+                text: "Câmera",
+                onPress: () => pickImage("camera"),
+              },
+              {
+                children: (
+                  <FontAwesome6
+                    name="image"
+                    size={24}
+                    color={colors.TextPrimary}
+                  />
+                ),
+                text: "Galeria",
+                onPress: () => pickImage("galeria"),
+              },
+            ]}
+          />
+          <View className="w-11/12 gap-8 justify-center mt-10">
+            <Input>
+              <Input.Field
+                control={control}
+                name="name"
+                placeholder={user?.name || "Nome"}
+                editable={editable}
               />
-            ),
-            text: "Câmera",
-            onPress: () => pickImage("camera"),
-          },
-          {
-            children: (
-              <FontAwesome6 name="image" size={24} color={colors.TextPrimary} />
-            ),
-            text: "Galeria",
-            onPress: () => pickImage("galeria"),
-          },
-        ]}
-      />
-      <View className="w-11/12 gap-8 justify-center mt-10">
-        <Input>
-          <Input.Field
-            control={control}
-            name="name"
-            placeholder={user?.name || "Nome"}
-            editable={editable}
-          />
-        </Input>
-        <Input>
-          <DateInput
-            control={control}
-            name="birthDate"
-            placeholder={
-              user?.birthDate
-                ? format(user?.birthDate, "dd/mm/yyyy")
-                : "Data de Nascimento"
-            }
-            editable={editable}
-          />
-        </Input>
-        <Input>
-          <Input.Field
-            control={control}
-            name="sus"
-            placeholder={user?.susNumber || "N° do SUS"}
-            editable={editable}
-            keyboardType="numeric"
-            className="text-black dark:text-white"
-          />
-        </Input>
+            </Input>
+            <Input>
+              <DateInput
+                control={control}
+                name="birthDate"
+                placeholder={
+                  user?.birthDate
+                    ? format(new Date(user?.birthDate), "dd/MM/yyyy")
+                    : "Data de Nascimento"
+                }
+                editable={editable}
+              />
+            </Input>
+            <Input>
+              <Input.Field
+                control={control}
+                name="sus"
+                placeholder={user?.susNumber || "N° do SUS"}
+                editable={editable}
+                keyboardType="numeric"
+              />
+            </Input>
 
-        <Input>
-          <Input.Field
-            control={control}
-            name="phone"
-            placeholder={user?.phoneNumber || "Telefone"}
-            editable={editable}
-            keyboardType="number-pad"
-            className="text-black dark:text-white"
-          />
-        </Input>
-        <Input>
-          <Input.Field
-            control={control}
-            name="email"
-            placeholder={user?.email || "E-mail"}
-            editable={editable}
-            keyboardType="email-address"
-          />
-        </Input>
-      </View>
-      <View className="w-96 justify-center mt-10">
-        <Button
-          title={editable ? "Confirmar" : "Editar informações"}
-          onPress={handleSubmit(onSubmit)}
-          isLoading={mutation.isPending}
-          backgroundColor={colors.ButtonBackground}
-          color={colors.ButtonText}
-          size={"h-16 w-full"}
-          border="rounded-2xl"
-        />
-      </View>
-    </View>
+            <Input>
+              <Input.Field
+                control={control}
+                name="phone"
+                placeholder={user?.phoneNumber || "Telefone"}
+                editable={editable}
+                keyboardType="number-pad"
+              />
+            </Input>
+            <Input>
+              <Input.Field
+                control={control}
+                name="email"
+                placeholder={user?.email || "E-mail"}
+                editable={editable}
+                keyboardType="email-address"
+              />
+            </Input>
+          </View>
+          <View className="w-96 justify-center mt-10">
+            <Button
+              title={editable ? "Confirmar" : "Editar informações"}
+              onPress={handleSubmit(onSubmit)}
+              isLoading={mutation.isPending}
+              backgroundColor={colors.ButtonBackground}
+              color={colors.ButtonText}
+              size={"h-16 w-full"}
+              border="rounded-2xl"
+            />
+          </View>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }

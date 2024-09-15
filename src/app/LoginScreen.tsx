@@ -146,7 +146,12 @@ export default function Login() {
               />
             </View>
             <View className="w-full items-end justify-end">
-              <Link href={"/ForgotPasswordScreen"}>
+              <Link
+                href={{
+                  pathname: "/ChangePasswordScreen",
+                  params: { origin: "login" },
+                }}
+              >
                 <Text className="font-regular text-base font-normal text-LinkText">
                   Esqueci minha senha
                 </Text>

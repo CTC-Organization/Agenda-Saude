@@ -51,30 +51,16 @@ export default function AppointmentsScreen() {
         <Text className="font-regular text-xl font-medium text-black dark:text-white">
           Minhas Consultas:
         </Text>
-        {!Array.isArray(appointments) || appointments?.length === 0 ? (
-          <View className="flex-1 justify-center items-center gap-10 my-10">
-            <Text className="font-regular text-lg text-black dark:text-white">
-              Nenhuma consulta encontrada.
-            </Text>
-            <Button
-              title="Ir para Requisições"
-              onPress={() => router.push("/RequestScreen")}
-              backgroundColor={colors.ButtonBackground}
-              color={colors.ButtonText}
-              size={"h-16 w-full"}
-              border="rounded-2xl border border-ButtonBorder"
-            />
-          </View>
-        ) : (
+        {Array.isArray(appointments) && appointments?.length > 0 ? (
           <FlashList
             data={(appointments as AppointmentProps[]).filter(
-              (item) =>
-                item.status !== "CANCELLED" && item.status !== "COMPLETED"
+              (item) => item.status !== "CANCELLED"
             )}
             renderItem={({ item }) => {
               const formattedDate = item.date
                 ? format(new Date(item.date), "dd/MM/yyyy")
                 : "";
+
               return (
                 <AccordionItem
                   key={item.id}
@@ -90,8 +76,22 @@ export default function AppointmentsScreen() {
                 />
               );
             }}
-            estimatedItemSize={20}
+            estimatedItemSize={40}
           />
+        ) : (
+          <View className="flex-1 justify-center items-center gap-10 my-10">
+            <Text className="font-regular text-lg text-black dark:text-white">
+              Nenhuma consulta encontrada.
+            </Text>
+            <Button
+              title="Ir para Requisições"
+              onPress={() => router.push("/RequestScreen")}
+              backgroundColor={colors.ButtonBackground}
+              color={colors.ButtonText}
+              size={"h-16 w-full"}
+              border="rounded-2xl border border-ButtonBorder"
+            />
+          </View>
         )}
       </View>
     </ScrollView>

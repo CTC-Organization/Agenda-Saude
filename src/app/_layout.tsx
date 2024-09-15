@@ -97,10 +97,11 @@ export default function Layout() {
               },
             }}
           />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
-            name="ForgotPasswordScreen"
+            name="ChangePasswordScreen"
             options={{
-              title: "Esqueci minha senha",
+              title: "Alterar Senha",
               headerStyle: { backgroundColor: headerBackgroundColor },
               headerTintColor: titleColor,
               headerShadowVisible: false,
@@ -112,7 +113,21 @@ export default function Layout() {
               },
             }}
           />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="NewPasswordScreen"
+            options={{
+              title: "Nova Senha",
+              headerStyle: { backgroundColor: headerBackgroundColor },
+              headerTintColor: titleColor,
+              headerShadowVisible: false,
+              headerTitleAlign: "center",
+              headerTitleStyle: {
+                fontSize: width > 390 ? 20 : 16,
+                fontFamily: "Inter_400Regular",
+                fontWeight: "bold",
+              },
+            }}
+          />
         </Stack>
         <Toast />
       </QueryClientProvider>

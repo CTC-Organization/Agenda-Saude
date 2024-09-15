@@ -250,6 +250,7 @@ export default function Profile() {
                 title={"Confirmar"}
                 onPress={handleSubmit(onSubmit)}
                 isLoading={mutation.isPending}
+                disabled={mutation.isPending}
                 backgroundColor={colors.ButtonBackground}
                 color={colors.ButtonText}
                 size={"h-16 w-full"}

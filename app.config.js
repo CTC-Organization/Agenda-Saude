@@ -1,5 +1,6 @@
 export default {
   expo: {
+    scheme: "myapp",
     android: {
       package: "com.lukajlp.AgendaSaude",
       googleServicesFile: "./google-services.json",
@@ -14,6 +15,11 @@ export default {
         "WRITE_EXTERNAL_STORAGE",
         "NOTIFICATIONS",
       ],
+      config: {
+        googleMaps: {
+          apiKey: process.env.EXPO_PUBLIC_MAPS_KEY,
+        },
+      },
     },
     extra: {
       eas: {

@@ -1,5 +1,6 @@
 # Agenda-Saude
 
+gerar o google-service com script
 configurar eas secret com o google-service...
 buidar com eas build --profile production --platform android
 eas secret:create --scope project --name SECRET_NAME --value secretvalue --type string

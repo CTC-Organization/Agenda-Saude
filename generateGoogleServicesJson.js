@@ -53,4 +53,3 @@ fs.writeFileSync(
   "google-services.json",
   JSON.stringify(googleServices, null, 2)
 );
-console.log("google-services.json gerado com sucesso.");

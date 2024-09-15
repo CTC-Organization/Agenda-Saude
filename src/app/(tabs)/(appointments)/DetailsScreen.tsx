@@ -11,7 +11,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
 import { Image, Linking, ScrollView, Text, View } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
 export default function DetailsScreen() {
   // Hooks
@@ -214,6 +214,7 @@ export default function DetailsScreen() {
               </Text>
               {latitudeString && longitudeString ? (
                 <MapView
+                  provider={PROVIDER_GOOGLE}
                   style={{ width: "100%", height: 200, borderRadius: 10 }}
                   initialRegion={{
                     latitude: parseFloat(latitudeString),

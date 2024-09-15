@@ -13,6 +13,13 @@ function handleRegistrationError(errorMessage: string) {
 }
 async function registerForPushNotificationsAsync() {
   if (Platform.OS === "android") {
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true, // Exibe alerta da notificação
+        shouldPlaySound: true, // Toca som da notificação
+        shouldSetBadge: false, // Não altera a contagem de badges
+      }),
+    });
     Notifications.setNotificationChannelAsync("default", {
       name: "default",
       importance: Notifications.AndroidImportance.MAX,
@@ -35,6 +42,18 @@ async function registerForPushNotificationsAsync() {
       );
       return;
     }
+
+    Notifications.addNotificationReceivedListener((notification) => {
+      console.log("Notificação recebida:", notification);
+
+      // Pega o appointmentDate da data da notificação
+      const appointmentDate =
+        notification.request.content.data?.appointmentDate;
+      if (appointmentDate) {
+        scheduleLocalNotification(appointmentDate);
+      }
+    });
+
     const projectId =
       Constants?.expoConfig?.extra?.eas?.projectId ??
       Constants?.easConfig?.projectId;
@@ -59,7 +78,6 @@ async function registerForPushNotificationsAsync() {
 
 export async function mobileDeviceCheckIn(patientId: string) {
   const expoToken = await registerForPushNotificationsAsync();
-  console.log(expoToken);
   await fetchWithAuthNotification(
     `mobile-devices/${patientId}`,
     "POST",
@@ -136,3 +154,29 @@ const fetchWithAuthNotification = async (
     throw error;
   }
 };
+
+// Função para agendar uma notificação local 20 minutos antes do appointmentDate
+async function scheduleLocalNotification(appointmentDateString: string) {
+  // Converte a string do formato '2024-09-15T00:00:00.000Z' para um objeto Date
+  const appointmentDate = new Date(appointmentDateString);
+
+  // Subtrai 20 minutos (20 * 60 * 1000 ms) do appointmentDate
+  const notificationDate = new Date(appointmentDate.getTime() - 20 * 60 * 1000);
+
+  // Se a data for válida e no futuro, agenda a notificação
+  if (notificationDate.getTime() > Date.now()) {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Lembrete de Consulta",
+        body: `Sua consulta para está marcada para ${appointmentDate.toLocaleString()}.`,
+        sound: true,
+      },
+      trigger: {
+        date: notificationDate, // Agenda para 20 minutos antes
+      },
+    });
+    console.log(`Notificação local agendada para: ${notificationDate}`);
+  } else {
+    console.log("A data da notificação é inválida ou já passou.");
+  }
+}

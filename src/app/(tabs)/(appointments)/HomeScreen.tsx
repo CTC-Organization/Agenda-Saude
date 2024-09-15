@@ -54,11 +54,11 @@ export default function AppointmentsScreen() {
         {Array.isArray(appointments) && appointments?.length > 0 ? (
           <FlashList
             data={(appointments as AppointmentProps[]).filter(
-              (item) => item.status !== "CANCELLED"
+              (item) => item.status !== "CANCELLED" && item.status !== "EXPIRED"
             )}
             renderItem={({ item }) => {
               const formattedDate = item.date
-                ? format(new Date(item.date), "dd/MM/yyyy")
+                ? format(new Date(item.date), "dd/MM/yyyy 'às' HH:mm")
                 : "";
 
               return (

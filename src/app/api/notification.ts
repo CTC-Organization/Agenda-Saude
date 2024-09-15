@@ -4,6 +4,7 @@ import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import { refreshToken } from "@/app/api/tokenService";
 import { useUserStore } from "@/store/userStore";
+import { format } from "date-fns";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -43,14 +44,21 @@ async function registerForPushNotificationsAsync() {
       return;
     }
 
-    Notifications.addNotificationReceivedListener((notification) => {
+    Notifications.addNotificationReceivedListener(async (notification) => {
       console.log("Notificação recebida:", notification);
-
       // Pega o appointmentDate da data da notificação
       const appointmentDate =
         notification.request.content.data?.appointmentDate;
+
+      await sendLog(
+        `0 request.content: ${notification.request.content} 0 request.content.data: ${notification.request.content?.data}`
+      );
+
+      await sendLog(
+        `Notificação recebida com appointmentDate: ${appointmentDate}`
+      );
       if (appointmentDate) {
-        scheduleLocalNotification(appointmentDate);
+        await scheduleLocalNotification(appointmentDate);
       }
     });
 
@@ -158,25 +166,52 @@ const fetchWithAuthNotification = async (
 // Função para agendar uma notificação local 20 minutos antes do appointmentDate
 async function scheduleLocalNotification(appointmentDateString: string) {
   // Converte a string do formato '2024-09-15T00:00:00.000Z' para um objeto Date
+  await sendLog(`1 appointmentDateString: ${appointmentDateString}`);
+
   const appointmentDate = new Date(appointmentDateString);
+
+  await sendLog(`2 Data criada com appointmentDateString: ${appointmentDate}`);
 
   // Subtrai 20 minutos (20 * 60 * 1000 ms) do appointmentDate
   const notificationDate = new Date(appointmentDate.getTime() - 20 * 60 * 1000);
 
   // Se a data for válida e no futuro, agenda a notificação
-  if (notificationDate.getTime() > Date.now()) {
+  const currentTime = new Date();
+
+  if (notificationDate.getTime() > currentTime.getTime()) {
+    const secondsUntilNotification = Math.floor(
+      (notificationDate.getTime() - currentTime.getTime()) / 1000
+    );
+
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: "Lembrete de Consulta",
-        body: `Sua consulta para está marcada para ${appointmentDate.toLocaleString()}.`,
+        title: "Lembrete de Requisição",
+        body: `Faltam 20 minutos: ${format(
+          appointmentDate,
+          "dd/MM/yyyy 'às' HH:mm"
+        )}.`,
         sound: true,
       },
       trigger: {
-        date: notificationDate, // Agenda para 20 minutos antes
+        seconds: secondsUntilNotification, // Agenda a notificação para o futuro em segundos
       },
     });
-    console.log(`Notificação local agendada para: ${notificationDate}`);
+    await sendLog(`3 Notificação local agendada para: ${notificationDate}`);
   } else {
-    console.log("A data da notificação é inválida ou já passou.");
+    await sendLog("4 A data da notificação é inválida ou já passou.");
+  }
+}
+
+async function sendLog(message: string) {
+  try {
+    await fetch(`${API_URL}/logs`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ message }),
+    });
+  } catch (error) {
+    console.error("Erro ao enviar log:", error);
   }
 }

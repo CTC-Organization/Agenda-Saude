@@ -72,6 +72,13 @@ export default function Profile() {
     Linking.openURL("mailto:ctcagendasaude@gmail.com");
   };
 
+  const handleChangePassword = () => {
+    router.push({
+      pathname: "/ChangePasswordScreen",
+      params: { origin: "settings" },
+    });
+  };
+
   const iconColor = isDarkTheme ? "white" : "black";
 
   return (
@@ -144,9 +151,7 @@ export default function Profile() {
         </Pressable>
 
         {/* Alterar Senha */}
-        <Pressable
-          onPress={() => router.push("/(settings)/ChangePasswordScreen")}
-        >
+        <Pressable onPress={handleChangePassword}>
           <View className="flex-row items-center justify-between">
             <View className="flex-row items-center gap-3">
               <FontAwesome6 name="key" size={24} color={iconColor} />

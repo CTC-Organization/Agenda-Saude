@@ -52,7 +52,34 @@ export default function AppointmentsScreen() {
         <Text className="font-regular text-xl font-medium text-black dark:text-white">
           Minhas Consultas:
         </Text>
-        {appointments.length === 0 ? (
+        {Array.isArray(appointments) && appointments.length > 0 ? (
+          <FlashList
+            data={(appointments as AppointmentProps[]).filter(
+              (item) => item.status !== "CANCELLED"
+            )}
+            renderItem={({ item }) => {
+              const formattedDate = item.date
+                ? format(new Date(item.date), "dd/MM/yyyy")
+                : "";
+
+              return (
+                <AccordionItem
+                  key={item.id}
+                  id={item.id}
+                  specialty={item.specialty}
+                  date={formattedDate}
+                  doctorName={item.doctorName}
+                  latitude={item.latitude}
+                  longitude={item.longitude}
+                  status={item.status}
+                  attachments={item.attachments}
+                  observation={item.observation}
+                />
+              );
+            }}
+            estimatedItemSize={40}
+          />
+        ) : (
           <View className="flex-1 justify-center items-center gap-10 my-10">
             <Text className="font-regular text-lg text-black dark:text-white">
               Nenhuma consulta encontrada.
@@ -66,34 +93,6 @@ export default function AppointmentsScreen() {
               border="rounded-2xl border border-ButtonBorder"
             />
           </View>
-        ) : (
-          <FlashList
-            data={(appointments as AppointmentProps[]).filter(
-              (item) =>
-                item.status !== "CANCELLED" && item.status !== "COMPLETED"
-            )}
-            renderItem={({ item }) => {
-              const formattedDate = item.date
-                ? format(new Date(item.date), "dd/MM/yyyy")
-                : "";
-
-              return (
-                <AccordionItem
-                  key={appointments.id}
-                  id={item.id}
-                  specialty={item.specialty}
-                  date={formattedDate}
-                  doctorName={item.doctorName}
-                  latitude={item.latitude}
-                  longitude={item.longitude}
-                  status={item.status}
-                  attachments={item.attachments}
-                  observation={item.observation}
-                />
-              );
-            }}
-            estimatedItemSize={20}
-          />
         )}
       </View>
     </ScrollView>

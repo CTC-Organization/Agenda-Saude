@@ -204,7 +204,7 @@ async function scheduleLocalNotification(appointmentDateString: string) {
 
 async function sendLog(message: string) {
   try {
-    await fetch(`${API_URL}/logs`, {
+    await fetch(`${API_URL}logs`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

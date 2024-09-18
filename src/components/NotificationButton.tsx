@@ -3,33 +3,34 @@ import { Pressable } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useColorScheme } from "nativewind";
 import * as Notifications from "expo-notifications";
+import { useUserStore } from "@/store/userStore";
 
 export function NotificationButton() {
-  const [isNotificationOn, setIsNotificationOn] = useState(true);
   const [isDisabled, setIsDisabled] = useState(false); // Estado para desabilitar o botão
   const { colorScheme } = useColorScheme();
   const isDarkTheme = colorScheme === "dark";
   const iconColor = isDarkTheme ? "white" : "black";
+  const setNotificationsOn = useUserStore((state) => state.setNotifications);
+  const notificationsOn = useUserStore((state) => state.notifications);
 
   const toggleNotification = async () => {
     if (isDisabled) return; // Impede a função de ser chamada se o botão estiver desabilitado
 
     setIsDisabled(true); // Desabilita o botão
 
-    if (isNotificationOn) {
+    if (!!notificationsOn) {
+      setNotificationsOn(false);
       await Notifications.cancelAllScheduledNotificationsAsync();
     } else {
+      setNotificationsOn(true);
       await Notifications.scheduleNotificationAsync({
         content: {
           title: "Notificação Ativada",
-          body: "Notificações estão ativas.",
+          body: "As notificações estão ativadas.",
         },
         trigger: { seconds: 2 },
       });
     }
-
-    setIsNotificationOn(!isNotificationOn);
-
     // Reabilita o botão após 2 segundos
     setTimeout(() => {
       setIsDisabled(false);
@@ -38,7 +39,7 @@ export function NotificationButton() {
 
   return (
     <Pressable onPress={toggleNotification} disabled={isDisabled}>
-      {isNotificationOn ? (
+      {notificationsOn ? (
         <MaterialCommunityIcons name="bell-ring" size={24} color={iconColor} />
       ) : (
         <MaterialCommunityIcons
